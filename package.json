@@ -1,0 +1,41 @@
+{
+  "name": "react-native-payments",
+  "version": "0.0.1",
+  "description": "Wrapper for react-native iOS in-app-purchases and Android in-app-billing.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahmanasadi/react-native-payments.git"
+  },
+  "keywords": [
+    "react-native",
+    "android",
+    "ios",
+    "in-app-purchases",
+    "in-app-billing"
+  ],
+  "author": "Bahman Asadi",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "16.0.0-beta.5",
+    "react-native": "0.49.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "eslint": "^4.15.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1"
+  },
+  "bugs": {
+    "url": "https://github.com/bahmanasadi/react-native-payments/issues"
+  },
+  "homepage": "https://github.com/bahmanasadi/react-native-payments#readme",
+  "dependencies": {
+    "prop-types": "^15.6.0"
+  }
+}
