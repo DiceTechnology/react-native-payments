@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-import ReactNativePurchasesWrapper from './src/wrappers/ReactNativePurchases';
+import ReactNativePaymentsWrapper from './src/wrappers/ReactNativePayments';
 
-export const ReactNativePurchases =
-    Platform.OS === 'ios' ? ReactNativePurchasesWrapper : { error: 'Android not implemented' };
+export const ReactNativePayments =
+    Platform.OS === 'ios' ? ReactNativePaymentsWrapper : { error: 'Android not implemented' };
