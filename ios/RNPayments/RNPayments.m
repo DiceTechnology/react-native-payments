@@ -248,7 +248,6 @@ RCT_EXPORT_METHOD(receiptData:(RCTResponseSenderBlock)callback)
 }
 
 - (NSDictionary *)getPurchaseData:(SKPaymentTransaction *)transaction {
-    // TODO: use [NSBundle appStoreReceiptURL] to download reciept instead of using the transaction receipt
     NSMutableDictionary *purchase = [NSMutableDictionary dictionaryWithDictionary: @{
                                                                                      @"transactionDate": @(transaction.transactionDate.timeIntervalSince1970 * 1000),
                                                                                      @"transactionIdentifier": transaction.transactionIdentifier,
@@ -260,6 +259,12 @@ RCT_EXPORT_METHOD(receiptData:(RCTResponseSenderBlock)callback)
     if (originalTransaction) {
         purchase[@"originalTransactionDate"] = @(originalTransaction.transactionDate.timeIntervalSince1970 * 1000);
         purchase[@"originalTransactionIdentifier"] = originalTransaction.transactionIdentifier;
+    }
+    
+    NSURL *receiptUrl = [[NSBundle mainBundle] appStoreReceiptURL];
+    NSData *receiptData = [NSData dataWithContentsOfURL:receiptUrl];
+    if (receiptData) {
+        purchase[@"appReceipt"] = [receiptData base64EncodedStringWithOptions:0];
     }
     
     return purchase;
