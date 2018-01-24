@@ -44,4 +44,11 @@ public class InAppBillingBridgePackage implements ReactPackage {
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
         return Arrays.<ViewManager>asList();
     }
+
+
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
+        if (billingBridge != null) {
+            billingBridge.onActivityResult(requestCode, resultCode, intent);
+        }
+    }
 }
