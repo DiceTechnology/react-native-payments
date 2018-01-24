@@ -4,9 +4,16 @@ const { InAppBillingBridge } = NativeModules;
 
 
 export default {
-  loadProducts: (productIds, callback) => {
+  loadProducts: (products, callback) => {
+    const googleProducts = products.reduce((acc, i) => {
+      if (i.googleId != null) {
+        acc.push(i.googleId);
+      }
+      return acc;
+    }, []);
+
     InAppBillingBridge.open()
-      .then(() => InAppBillingBridge.getProductDetails(productIds))
+      .then(() => InAppBillingBridge.getProductDetails(googleProducts))
       .then((details) => {
         callback(null, details);
         InAppBillingBridge.close();
@@ -41,4 +48,5 @@ export default {
       InAppBillingBridge.close();
     });
   },
+  name: 'index.android.js',
 };
