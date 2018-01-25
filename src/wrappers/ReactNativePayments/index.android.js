@@ -13,6 +13,12 @@ export default {
       return acc;
     }, []);
 
+    if (googleProducts.length === 0) {
+      callback(null, []);
+      return;
+    }
+
+    InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => {
         return Q.all([
@@ -21,8 +27,7 @@ export default {
         ]);
       })
       .then((details) => {
-        console.log(arguments);
-        callback(null, details);
+        callback(null, [].concat.apply([], details));
         InAppBillingBridge.close();
       })
       .catch(e => {
@@ -31,6 +36,7 @@ export default {
       })
   },
   purchase: (product, callback, developerPayload = null) => {
+    InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.purchase(product.googleId, developerPayload))
       .then((details) => {
@@ -43,6 +49,7 @@ export default {
       });
   },
   subscribe(product, callback, developerPayload = null) {
+    InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.subscribe(product.googleId, developerPayload))
       .then((details) => {
