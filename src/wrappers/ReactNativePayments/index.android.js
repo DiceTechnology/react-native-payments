@@ -1,4 +1,5 @@
 import { NativeModules } from 'react-native';
+import Q from 'q';
 
 const { InAppBillingBridge } = NativeModules;
 
@@ -13,8 +14,14 @@ export default {
     }, []);
 
     InAppBillingBridge.open()
-      .then(() => InAppBillingBridge.getProductDetails(googleProducts))
+      .then(() => {
+        return Q.all([
+          InAppBillingBridge.getProductDetails(googleProducts),
+          InAppBillingBridge.getSubscriptionDetails(googleProducts),
+        ]);
+      })
       .then((details) => {
+        console.log(arguments);
         callback(null, details);
         InAppBillingBridge.close();
       })
@@ -23,9 +30,9 @@ export default {
         InAppBillingBridge.close();
       })
   },
-  purchase: (productId, callback, developerPayload = null) => {
+  purchase: (product, callback, developerPayload = null) => {
     InAppBillingBridge.open()
-      .then(() => InAppBillingBridge.purchase(productId, developerPayload))
+      .then(() => InAppBillingBridge.purchase(product.googleId, developerPayload))
       .then((details) => {
         callback(null, details);
         InAppBillingBridge.close();
@@ -35,18 +42,17 @@ export default {
         InAppBillingBridge.close();
       });
   },
-  subscribe(productId, callback, developerPayload = null) {
-    return InAppBillingBridge.subscribe(productId, developerPayload);
+  subscribe(product, callback, developerPayload = null) {
     InAppBillingBridge.open()
-    .then(() => InAppBillingBridge.subscribe(productId, developerPayload))
-    .then((details) => {
-      callback(null, details);
-      InAppBillingBridge.close();
-    })
-    .catch(e => {
-      callback(e);
-      InAppBillingBridge.close();
-    });
+      .then(() => InAppBillingBridge.subscribe(product.googleId, developerPayload))
+      .then((details) => {
+        callback(null, details);
+        InAppBillingBridge.close();
+      })
+      .catch(e => {
+        callback(e);
+        InAppBillingBridge.close();
+      });
   },
   name: 'index.android.js',
 };

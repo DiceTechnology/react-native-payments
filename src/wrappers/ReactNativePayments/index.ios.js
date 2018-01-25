@@ -12,11 +12,11 @@ export default {
     }, []);
     RNPayments.loadProducts(appleProducts, callback);
   },
-  purchase: (productId, developerPayload, callback) => {
-    RNPayments.purchaseProduct(productId, callback);
+  purchase: (product, developerPayload, callback) => {
+    RNPayments.purchaseProduct(product.appleId, callback);
   },
-  subscribe(productId, developerPayload, callback) {
-    RNPayments.purchaseProduct(productId, callback);
+  subscribe(product, developerPayload, callback) {
+    RNPayments.purchaseProduct(product.appleId, callback);
   },
   name: 'index.ios.js',
 }
