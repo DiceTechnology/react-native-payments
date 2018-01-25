@@ -35,7 +35,7 @@ export default {
         InAppBillingBridge.close();
       })
   },
-  purchase: (product, callback, developerPayload = null) => {
+  purchase: (product, developerPayload = null, callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.purchase(product.googleId, developerPayload))
@@ -48,7 +48,7 @@ export default {
         InAppBillingBridge.close();
       });
   },
-  subscribe(product, callback, developerPayload = null) {
+  subscribe(product, developerPayload = null, callback) {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.subscribe(product.googleId, developerPayload))
