@@ -39,8 +39,21 @@ export default {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.purchase(product.googleId, developerPayload))
-      .then((details) => {
-        callback(null, details);
+      .then((success) => {
+        if (success) {
+          return InAppBillingBridge.getPurchaseTransactionDetails(product.googleId);
+        } else {
+          throw new Error('Subscription was unsuccessful, please try again');
+        }
+      })
+      .then((details) =>{
+        const payload = {
+          productIdentifier: details.productId,
+          appReceipt: btoa(JSON.stringify(details)),
+          transactionDate: details.purchaseTime,
+          transactionIdentifier: details.purchaseToken,
+        };
+        callback(null, payload);
         InAppBillingBridge.close();
       })
       .catch(e => {
@@ -52,8 +65,21 @@ export default {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.subscribe(product.googleId, developerPayload))
-      .then((details) => {
-        callback(null, details);
+      .then((success) => {
+        if (success) {
+          return InAppBillingBridge.getSubscriptionTransactionDetails(product.googleId);
+        } else {
+          throw new Error('Subscription was unsuccessful, please try again');
+        }
+      })
+      .then((details) =>{
+        const payload = {
+          productIdentifier: details.productId,
+          appReceipt: btoa(JSON.stringify(details)),
+          transactionDate: details.purchaseTime,
+          transactionIdentifier: details.purchaseToken,
+        };
+        callback(null, payload);
         InAppBillingBridge.close();
       })
       .catch(e => {
