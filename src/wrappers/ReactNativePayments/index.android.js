@@ -41,11 +41,12 @@ export default {
       .then(() => InAppBillingBridge.purchase(product.googleId, developerPayload))
       .then((success) => {
         if (success) {
-          return InAppBillingBridge.getPurchaseTransactionDetails(product.googleId);
+          return InAppBillingBridge.loadOwnedPurchasesFromGoogle();
         } else {
-          throw new Error('Subscription was unsuccessful, please try again');
+          throw new Error('Purchase was unsuccessful, please try again');
         }
       })
+      .then(() => InAppBillingBridge.getPurchaseTransactionDetails(product.googleId))
       .then((details) =>{
         const payload = {
           productIdentifier: details.productId,
@@ -80,6 +81,19 @@ export default {
           transactionIdentifier: details.purchaseToken,
         };
         callback(null, payload);
+        InAppBillingBridge.close();
+      })
+      .catch(e => {
+        callback(e);
+        InAppBillingBridge.close();
+      });
+  },
+  consume: (product, callback) => {
+    InAppBillingBridge.close();
+    InAppBillingBridge.open()
+      .then(() => InAppBillingBridge.consumePurchase(product.googleId))
+      .then((details) =>{
+        callback(null, details);
         InAppBillingBridge.close();
       })
       .catch(e => {
