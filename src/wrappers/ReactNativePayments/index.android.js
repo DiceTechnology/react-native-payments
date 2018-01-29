@@ -68,11 +68,12 @@ export default {
       .then(() => InAppBillingBridge.subscribe(product.googleId, developerPayload))
       .then((success) => {
         if (success) {
-          return InAppBillingBridge.getSubscriptionTransactionDetails(product.googleId);
+          return InAppBillingBridge.loadOwnedPurchasesFromGoogle();
         } else {
           throw new Error('Subscription was unsuccessful, please try again');
         }
       })
+      .then(() => InAppBillingBridge.getSubscriptionTransactionDetails(product.googleId))
       .then((details) =>{
         const payload = {
           productIdentifier: details.productId,
