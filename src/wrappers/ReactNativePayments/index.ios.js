@@ -18,5 +18,8 @@ export default {
   subscribe(product, developerPayload, callback) {
     RNPayments.purchaseProduct(product.appleId, callback);
   },
+  restore: ((callback) => {
+    RNPayments.restore(callback);
+  }),
   name: 'index.ios.js',
 }
