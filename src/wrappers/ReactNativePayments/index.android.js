@@ -1,5 +1,6 @@
 import { NativeModules } from 'react-native';
 import Q from 'q';
+import base64 from '../../utils/base64';
 
 const { InAppBillingBridge } = NativeModules;
 
@@ -20,20 +21,18 @@ export default {
 
     InAppBillingBridge.close();
     InAppBillingBridge.open()
-      .then(() => {
-        return Q.all([
-          InAppBillingBridge.getProductDetails(googleProducts),
-          InAppBillingBridge.getSubscriptionDetails(googleProducts),
-        ]);
-      })
+      .then(() => Q.all([
+        InAppBillingBridge.getProductDetails(googleProducts),
+        InAppBillingBridge.getSubscriptionDetails(googleProducts),
+      ]))
       .then((details) => {
         callback(null, [].concat.apply([], details));
         InAppBillingBridge.close();
       })
-      .catch(e => {
+      .catch((e) => {
         callback(e);
         InAppBillingBridge.close();
-      })
+      });
   },
   purchase: (product, developerPayload = null, callback) => {
     InAppBillingBridge.close();
@@ -42,22 +41,21 @@ export default {
       .then((success) => {
         if (success) {
           return InAppBillingBridge.loadOwnedPurchasesFromGoogle();
-        } else {
-          throw new Error('Purchase was unsuccessful, please try again');
         }
+        throw new Error('Purchase was unsuccessful, please try again');
       })
       .then(() => InAppBillingBridge.getPurchaseTransactionDetails(product.googleId))
-      .then((details) =>{
+      .then((details) => {
         const payload = {
           productIdentifier: details.productId,
-          appReceipt: btoa(JSON.stringify(details)),
+          appReceipt: base64.btoa(JSON.stringify(details)),
           transactionDate: details.purchaseTime,
           transactionIdentifier: details.purchaseToken,
         };
         callback(null, payload);
         InAppBillingBridge.close();
       })
-      .catch(e => {
+      .catch((e) => {
         callback(e);
         InAppBillingBridge.close();
       });
@@ -69,22 +67,21 @@ export default {
       .then((success) => {
         if (success) {
           return InAppBillingBridge.loadOwnedPurchasesFromGoogle();
-        } else {
-          throw new Error('Subscription was unsuccessful, please try again');
         }
+        throw new Error('Subscription was unsuccessful, please try again');
       })
       .then(() => InAppBillingBridge.getSubscriptionTransactionDetails(product.googleId))
-      .then((details) =>{
+      .then((details) => {
         const payload = {
           productIdentifier: details.productId,
-          appReceipt: btoa(JSON.stringify(details)),
+          appReceipt: base64.btoa(JSON.stringify(details)),
           transactionDate: details.purchaseTime,
           transactionIdentifier: details.purchaseToken,
         };
         callback(null, payload);
         InAppBillingBridge.close();
       })
-      .catch(e => {
+      .catch((e) => {
         callback(e);
         InAppBillingBridge.close();
       });
@@ -93,11 +90,11 @@ export default {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.consumePurchase(product.googleId))
-      .then((details) =>{
+      .then((details) => {
         callback(null, details);
         InAppBillingBridge.close();
       })
-      .catch(e => {
+      .catch((e) => {
         callback(e);
         InAppBillingBridge.close();
       });
