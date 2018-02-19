@@ -99,5 +99,43 @@ export default {
         InAppBillingBridge.close();
       });
   },
+  restore: ((callback) => {
+    InAppBillingBridge.close();
+    InAppBillingBridge.open()
+      .then(() => InAppBillingBridge.loadOwnedPurchasesFromGoogle())
+      .then(() => Q.all([
+        InAppBillingBridge.listOwnedProducts(),
+        InAppBillingBridge.listOwnedSubscriptions(),
+      ]))
+      .then((ownedLists) => {
+        const [products, subscriptions] = ownedLists;
+        let transactions = [];
+        if (products != null && Array.isArray(products) && products.length > 0) {
+          const productTransactions = products.map(p =>
+            InAppBillingBridge.getPurchaseTransactionDetails(p));
+          transactions = transactions.concat(productTransactions);
+        }
+        if (subscriptions != null && Array.isArray(subscriptions) && subscriptions.length > 0) {
+          const subscriptionTransactions = subscriptions.map(s =>
+            InAppBillingBridge.getSubscriptionTransactionDetails(s));
+          transactions = transactions.concat(subscriptionTransactions);
+        }
+        return Q.all(transactions);
+      })
+      .then((transactions) => {
+        const payload = transactions.map(t => ({
+          productIdentifier: t.productId,
+          appReceipt: base64.btoa(JSON.stringify(t)),
+          transactionDate: t.purchaseTime,
+          transactionIdentifier: t.purchaseToken,
+        }))
+        callback(null, payload);
+        InAppBillingBridge.close();
+      })
+      .catch((e) => {
+        callback(e);
+        InAppBillingBridge.close();
+      });
+  }),
   name: 'index.android.js',
 };

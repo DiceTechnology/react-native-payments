@@ -22,4 +22,4 @@ export default {
     RNPayments.restorePurchases(callback);
   }),
   name: 'index.ios.js',
-}
+};
