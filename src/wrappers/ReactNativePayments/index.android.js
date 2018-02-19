@@ -110,12 +110,12 @@ export default {
       .then((ownedLists) => {
         const [products, subscriptions] = ownedLists;
         let transactions = [];
-        if (products != null && Array.isArray(products) && products.length > 0) {
+        if (Array.isArray(products) && products.length > 0) {
           const productTransactions = products.map(p =>
             InAppBillingBridge.getPurchaseTransactionDetails(p));
           transactions = transactions.concat(productTransactions);
         }
-        if (subscriptions != null && Array.isArray(subscriptions) && subscriptions.length > 0) {
+        if (Array.isArray(subscriptions) && subscriptions.length > 0) {
           const subscriptionTransactions = subscriptions.map(s =>
             InAppBillingBridge.getSubscriptionTransactionDetails(s));
           transactions = transactions.concat(subscriptionTransactions);

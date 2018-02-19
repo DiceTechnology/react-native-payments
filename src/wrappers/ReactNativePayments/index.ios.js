@@ -19,7 +19,16 @@ export default {
     RNPayments.purchaseProduct(product.appleId, callback);
   },
   restore: ((callback) => {
-    RNPayments.restorePurchases(callback);
+    RNPayments.restorePurchases((err, response) => {
+      if (err) {
+        callback(err);
+      } else {
+        if (Array.isArray(response) && response.length > 0) {
+          response.sort((a, b) => b.transactionDate - a.transactionDate);
+          callback(null, response[0]);
+        }
+      }
+    });
   }),
   name: 'index.ios.js',
 };
