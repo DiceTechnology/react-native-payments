@@ -25,7 +25,7 @@ export default {
       } else {
         if (Array.isArray(response) && response.length > 0) {
           response.sort((a, b) => b.transactionDate - a.transactionDate);
-          callback(null, response[0]);
+          callback(null, [response[0]]);
         } else {
           callback(null, []);
         }
