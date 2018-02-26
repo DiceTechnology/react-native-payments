@@ -5,6 +5,7 @@ import base64 from '../../utils/base64';
 const { InAppBillingBridge } = NativeModules;
 
 export default {
+  // callback(error, result)
   loadProducts: (products, callback) => {
     const googleProducts = products.reduce((acc, i) => {
       if (i.googleId != null) {
@@ -27,13 +28,11 @@ export default {
         ]))
       .then((details) => {
         callback(null, [].concat.apply([], details));
-        InAppBillingBridge.close();
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
   },
+  // callback(error, result)
   purchase: (product, developerPayload = null, callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
@@ -53,13 +52,11 @@ export default {
           transactionIdentifier: details.purchaseToken,
         };
         callback(null, payload);
-        InAppBillingBridge.close();
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
   },
+  // callback(error, result)
   subscribe(product, developerPayload = null, callback) {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
@@ -81,24 +78,21 @@ export default {
         callback(null, payload);
         InAppBillingBridge.close();
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
   },
+  // callback(error, result)
   consume: (product, callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.consumePurchase(product.googleId))
       .then((details) => {
         callback(null, { product, ...details });
-        InAppBillingBridge.close();
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
   },
+  // callback(error, result)
   restore: (callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
@@ -131,12 +125,9 @@ export default {
           transactionIdentifier: t.purchaseToken,
         }));
         callback(null, payload);
-        InAppBillingBridge.close();
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
   },
   eventEmitter: {
     addListener: () => {
