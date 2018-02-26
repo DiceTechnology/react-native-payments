@@ -1,6 +1,8 @@
-import { NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
 
 const { RNPayments } = NativeModules;
+
+const eventEmitter = new NativeEventEmitter(RNPayments);
 
 export default {
   loadProducts: (products, callback) => {
@@ -18,19 +20,18 @@ export default {
   subscribe(product, developerPayload, callback) {
     RNPayments.purchaseProduct(product.appleId, callback);
   },
-  restore: ((callback) => {
+  restore: (callback) => {
     RNPayments.restorePurchases((err, response) => {
       if (err) {
         callback(err);
+      } else if (Array.isArray(response) && response.length > 0) {
+        response.sort((a, b) => b.transactionDate - a.transactionDate);
+        callback(null, [response[0]]);
       } else {
-        if (Array.isArray(response) && response.length > 0) {
-          response.sort((a, b) => b.transactionDate - a.transactionDate);
-          callback(null, [response[0]]);
-        } else {
-          callback(null, []);
-        }
+        callback(null, []);
       }
     });
-  }),
+  },
+  eventEmitter,
   name: 'index.ios.js',
 };

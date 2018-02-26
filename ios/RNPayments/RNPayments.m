@@ -6,6 +6,9 @@
 
 #import "SKProduct+StringPrice.h"
 
+NSString *const RNPaymentsTransactionState = @"RNPaymentsTransactionState";
+NSString *const RNPaymentsTransactionStatePurchased = @"RNPaymentsTransactionStatePurchased";
+NSString *const RNPaymentsTransaction = @"RNPaymentsTransaction";
 
 @implementation RNPayments
 
@@ -35,6 +38,11 @@
 
 RCT_EXPORT_MODULE()
 
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[RNPaymentsTransaction];
+}
+
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
 {
     for (SKPaymentTransaction *transaction in transactions) {
@@ -60,6 +68,12 @@ RCT_EXPORT_MODULE()
                     [_callbacks removeObjectForKey:key];
                 } else {
                     RCTLogWarn(@"No callback registered for transaction with state purchased.");
+                    NSDictionary *purchase = [self getPurchaseData:transaction];
+                    NSDictionary *body =@{
+                                          RNPaymentsTransactionState: RNPaymentsTransactionStatePurchased,
+                                          @"purchase": purchase
+                                          };
+                    [self sendEventWithName:RNPaymentsTransaction body: body];
                 }
                 [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
                 break;

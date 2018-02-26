@@ -2,7 +2,8 @@
 #import <StoreKit/StoreKit.h>
 
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
-@interface RNPayments : NSObject <RCTBridgeModule, SKProductsRequestDelegate, SKPaymentTransactionObserver>
+@interface RNPayments : RCTEventEmitter <RCTBridgeModule, SKProductsRequestDelegate, SKPaymentTransactionObserver>
 
 @end
