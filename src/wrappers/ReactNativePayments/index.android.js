@@ -4,8 +4,8 @@ import base64 from '../../utils/base64';
 
 const { InAppBillingBridge } = NativeModules;
 
-
 export default {
+  // callback(error, result)
   loadProducts: (products, callback) => {
     const googleProducts = products.reduce((acc, i) => {
       if (i.googleId != null) {
@@ -21,19 +21,18 @@ export default {
 
     InAppBillingBridge.close();
     InAppBillingBridge.open()
-      .then(() => Q.all([
-        InAppBillingBridge.getProductDetails(googleProducts),
-        InAppBillingBridge.getSubscriptionDetails(googleProducts),
-      ]))
+      .then(() =>
+        Q.all([
+          InAppBillingBridge.getProductDetails(googleProducts),
+          InAppBillingBridge.getSubscriptionDetails(googleProducts),
+        ]))
       .then((details) => {
         callback(null, [].concat.apply([], details));
-        InAppBillingBridge.close();
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
   },
+  // callback(error, result)
   purchase: (product, developerPayload = null, callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
@@ -53,13 +52,11 @@ export default {
           transactionIdentifier: details.purchaseToken,
         };
         callback(null, payload);
-        InAppBillingBridge.close();
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
   },
+  // callback(error, result)
   subscribe(product, developerPayload = null, callback) {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
@@ -81,32 +78,30 @@ export default {
         callback(null, payload);
         InAppBillingBridge.close();
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
   },
+  // callback(error, result)
   consume: (product, callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.consumePurchase(product.googleId))
       .then((details) => {
-        callback(null, details);
-        InAppBillingBridge.close();
+        callback(null, { product, ...details });
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
   },
-  restore: ((callback) => {
+  // callback(error, result)
+  restore: (callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
       .then(() => InAppBillingBridge.loadOwnedPurchasesFromGoogle())
-      .then(() => Q.all([
-        InAppBillingBridge.listOwnedProducts(),
-        InAppBillingBridge.listOwnedSubscriptions(),
-      ]))
+      .then(() =>
+        Q.all([
+          InAppBillingBridge.listOwnedProducts(),
+          InAppBillingBridge.listOwnedSubscriptions(),
+        ]))
       .then((ownedLists) => {
         const [products, subscriptions] = ownedLists;
         let transactions = [];
@@ -128,14 +123,19 @@ export default {
           appReceipt: base64.btoa(JSON.stringify(t)),
           transactionDate: t.purchaseTime,
           transactionIdentifier: t.purchaseToken,
-        }))
+        }));
         callback(null, payload);
-        InAppBillingBridge.close();
       })
-      .catch((e) => {
-        callback(e);
-        InAppBillingBridge.close();
-      });
-  }),
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
+  },
+  eventEmitter: {
+    addListener: () => {
+      console.warn('eventEmitter.addListener: Not implemented on Android');
+    },
+    remove: () => {
+      console.warn('eventEmitter.addListener: Not implemented on Android');
+    },
+  },
   name: 'index.android.js',
 };

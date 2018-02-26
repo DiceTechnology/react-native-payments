@@ -1,6 +1,6 @@
 {
   "name": "react-native-payments",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Wrapper for react-native iOS in-app-purchases and Android in-app-billing.",
   "main": "index.js",
   "scripts": {
@@ -10,13 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/bahmanasadi/react-native-payments.git"
   },
-  "keywords": [
-    "react-native",
-    "android",
-    "ios",
-    "in-app-purchases",
-    "in-app-billing"
-  ],
+  "keywords": ["react-native", "android", "ios", "in-app-purchases", "in-app-billing"],
   "author": "Bahman Asadi",
   "license": "MIT",
   "peerDependencies": {
