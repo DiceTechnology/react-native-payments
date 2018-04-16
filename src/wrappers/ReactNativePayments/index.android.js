@@ -3,9 +3,11 @@ import Q from 'q';
 import base64 from '../../utils/base64';
 
 const { InAppBillingBridge } = NativeModules;
-
 export default {
-  // callback(error, result)
+  /**
+   * @param {[{googleId: string}]} list of products
+   * @param {funcion} callback with (error, results)
+   */
   loadProducts: (products, callback) => {
     const googleProducts = products.reduce((acc, i) => {
       if (i.googleId != null) {
@@ -32,7 +34,11 @@ export default {
       .catch(callback)
       .finally(() => InAppBillingBridge.close());
   },
-  // callback(error, result)
+  /**
+   * @param {googleId: string} product which is to be purchased
+   * @param {string} the developer payload to be signed by google
+   * @param {funcion} callback with (error, results)
+   */
   purchase: (product, developerPayload = null, callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
@@ -56,7 +62,11 @@ export default {
       .catch(callback)
       .finally(() => InAppBillingBridge.close());
   },
-  // callback(error, result)
+  /**
+   * @param {googleId: string} product which is to be subscribed to
+   * @param {string} the developer payload to be signed by google
+   * @param {funcion} callback with (error, results)
+   */
   subscribe(product, developerPayload = null, callback) {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
@@ -81,7 +91,30 @@ export default {
       .catch(callback)
       .finally(() => InAppBillingBridge.close());
   },
-  // callback(error, result)
+  /**
+   * @param {[{googleId: string}]} list of old products which are to be removed
+   * @param {googleId: string} product which is to be subscribed to
+   * @param {funcion} callback with (error, results)
+   */
+  upgrade: (oldProducts, product, callback) => {
+    InAppBillingBridge.close();
+    InAppBillingBridge.open()
+      .then(() =>
+        InAppBillingBridge.updateSubscription(
+          oldProducts.map(p => p.googleId),
+          product.googleId,
+          callback,
+        ))
+      .then((details) => {
+        callback(null, { product, ...details });
+      })
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
+  },
+  /**
+   * @param {googleId: string} product which is to be consumed
+   * @param {funcion} callback with (error, results)
+   */
   consume: (product, callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
@@ -92,7 +125,9 @@ export default {
       .catch(callback)
       .finally(() => InAppBillingBridge.close());
   },
-  // callback(error, result)
+  /**
+   * @param {funcion} callback with (error, results)
+   */
   restore: (callback) => {
     InAppBillingBridge.close();
     InAppBillingBridge.open()
