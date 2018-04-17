@@ -105,7 +105,6 @@ export default {
           oldProducts.map(p => p.googleId),
           product.googleId,
           developerPayload,
-          callback,
         ))
       .then((details) => {
         callback(null, { product, ...details });
