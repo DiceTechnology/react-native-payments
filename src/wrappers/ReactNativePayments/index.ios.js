@@ -44,6 +44,16 @@ export default {
   },
   /**
    * @param {funcion} callback with (error, results)
+   * @returns {[products, subscriptions]} returns an array containing 2 items.
+   * The first is an array of products owned. The second is an array of
+   * owned subscriptions
+   */
+  loadOwnedPurchases: (callback) => {
+    console.warn('loadOwnedPurchases: Not implemented on iOS');
+    callback(null, [[], []]);
+  },
+  /**
+   * @param {funcion} callback with (error, results)
    */
   restore: (callback) => {
     RNPayments.restorePurchases((err, response) => {

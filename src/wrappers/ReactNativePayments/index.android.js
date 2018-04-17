@@ -127,10 +127,27 @@ export default {
   },
   /**
    * @param {funcion} callback with (error, results)
+   * @returns {[products, subscriptions]} returns an array containing 2 items.
+   * The first is an array of products owned. The second is an array of
+   * owned subscriptions
+   */
+  loadOwnedPurchases: (callback) => {
+    inAppBillingSafeOpen()
+      .then(() => InAppBillingBridge.loadOwnedPurchasesFromGoogle())
+      .then(() =>
+        Q.all([
+          InAppBillingBridge.listOwnedProducts(),
+          InAppBillingBridge.listOwnedSubscriptions(),
+        ]))
+      .then(ownedLists => callback(null, ownedLists))
+      .catch(callback)
+      .finally(() => InAppBillingBridge.close());
+  },
+  /**
+   * @param {funcion} callback with (error, results)
    */
   restore: (callback) => {
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+    inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.loadOwnedPurchasesFromGoogle())
       .then(() =>
         Q.all([
