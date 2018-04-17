@@ -43,7 +43,7 @@ export default {
    * @param {string} the developer payload to be signed by google
    * @param {funcion} callback with (error, results)
    */
-  purchase: (product, developerPayload = null, callback) => {
+  purchase: (product, developerPayload, callback) => {
     inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.purchase(product.googleId, developerPayload))
       .then((success) => {
@@ -70,7 +70,7 @@ export default {
    * @param {string} the developer payload to be signed by google
    * @param {funcion} callback with (error, results)
    */
-  subscribe(product, developerPayload = null, callback) {
+  subscribe(product, developerPayload, callback) {
     inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.subscribe(product.googleId, developerPayload))
       .then((success) => {
@@ -98,12 +98,13 @@ export default {
    * @param {googleId: string} product which is to be subscribed to
    * @param {funcion} callback with (error, results)
    */
-  upgrade: (oldProducts, product, callback) => {
+  upgrade: (oldProducts, product, developerPayload, callback) => {
     inAppBillingSafeOpen()
       .then(() =>
         InAppBillingBridge.updateSubscription(
           oldProducts.map(p => p.googleId),
           product.googleId,
+          developerPayload,
           callback,
         ))
       .then((details) => {

@@ -39,7 +39,7 @@ export default {
    * @param {appleId: string} product which is to be subscribed to
    * @param {funcion} callback with (error, results)
    */
-  upgrade: (oldProducts, product, callback) => {
+  upgrade: (oldProducts, product, developerPayload, callback) => {
     RNPayments.purchaseProduct(product.appleId, callback);
   },
   /**
