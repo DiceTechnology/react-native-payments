@@ -3,6 +3,11 @@ import Q from 'q';
 import base64 from '../../utils/base64';
 
 const { InAppBillingBridge } = NativeModules;
+
+function inAppBillingSafeOpen() {
+  return InAppBillingBridge.close().then(() => InAppBillingBridge.open());
+}
+
 export default {
   /**
    * @param {[{googleId: string}]} list of products
@@ -21,8 +26,7 @@ export default {
       return;
     }
 
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+    inAppBillingSafeOpen()
       .then(() =>
         Q.all([
           InAppBillingBridge.getProductDetails(googleProducts),
@@ -40,8 +44,7 @@ export default {
    * @param {funcion} callback with (error, results)
    */
   purchase: (product, developerPayload = null, callback) => {
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+    inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.purchase(product.googleId, developerPayload))
       .then((success) => {
         if (success) {
@@ -68,8 +71,7 @@ export default {
    * @param {funcion} callback with (error, results)
    */
   subscribe(product, developerPayload = null, callback) {
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+    inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.subscribe(product.googleId, developerPayload))
       .then((success) => {
         if (success) {
@@ -97,8 +99,7 @@ export default {
    * @param {funcion} callback with (error, results)
    */
   upgrade: (oldProducts, product, callback) => {
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+    inAppBillingSafeOpen()
       .then(() =>
         InAppBillingBridge.updateSubscription(
           oldProducts.map(p => p.googleId),
@@ -116,8 +117,7 @@ export default {
    * @param {funcion} callback with (error, results)
    */
   consume: (product, callback) => {
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+    inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.consumePurchase(product.googleId))
       .then((details) => {
         callback(null, { product, ...details });
