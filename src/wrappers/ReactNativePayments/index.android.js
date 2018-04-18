@@ -88,7 +88,6 @@ export default {
           transactionIdentifier: details.purchaseToken,
         };
         callback(null, payload);
-        InAppBillingBridge.close();
       })
       .catch(callback)
       .finally(() => InAppBillingBridge.close());
@@ -115,7 +114,13 @@ export default {
       .then(() => InAppBillingBridge.getSubscriptionTransactionDetails(product.googleId))
 
       .then((details) => {
-        callback(null, { product, ...details });
+        const payload = {
+          productIdentifier: details.productId,
+          appReceipt: base64.btoa(JSON.stringify(details)),
+          transactionDate: details.purchaseTime,
+          transactionIdentifier: details.purchaseToken,
+        };
+        callback(null, payload);
       })
       .catch(callback)
       .finally(() => InAppBillingBridge.close());
