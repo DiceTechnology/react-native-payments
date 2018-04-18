@@ -106,6 +106,14 @@ export default {
           product.googleId,
           developerPayload,
         ))
+      .then((success) => {
+        if (success) {
+          return InAppBillingBridge.loadOwnedPurchasesFromGoogle();
+        }
+        throw new Error('Subscription was unsuccessful, please try again');
+      })
+      .then(() => InAppBillingBridge.getSubscriptionTransactionDetails(product.googleId))
+
       .then((details) => {
         callback(null, { product, ...details });
       })
