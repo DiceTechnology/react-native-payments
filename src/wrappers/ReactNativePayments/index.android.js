@@ -4,8 +4,15 @@ import base64 from '../../utils/base64';
 
 const { InAppBillingBridge } = NativeModules;
 
+function inAppBillingSafeOpen() {
+  return InAppBillingBridge.close().then(() => InAppBillingBridge.open());
+}
+
 export default {
-  // callback(error, result)
+  /**
+   * @param {[{googleId: string}]} list of products
+   * @param {funcion} callback with (error, results)
+   */
   loadProducts: (products, callback) => {
     const googleProducts = products.reduce((acc, i) => {
       if (i.googleId != null) {
@@ -19,8 +26,7 @@ export default {
       return;
     }
 
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+    inAppBillingSafeOpen()
       .then(() =>
         Q.all([
           InAppBillingBridge.getProductDetails(googleProducts),
@@ -30,12 +36,15 @@ export default {
         callback(null, [].concat.apply([], details));
       })
       .catch(callback)
-      .finally(() => InAppBillingBridge.close());
+      .finally(InAppBillingBridge.close);
   },
-  // callback(error, result)
-  purchase: (product, developerPayload = null, callback) => {
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+  /**
+   * @param {googleId: string} product which is to be purchased
+   * @param {string} the developer payload to be signed by google
+   * @param {funcion} callback with (error, results)
+   */
+  purchase: (product, developerPayload, callback) => {
+    inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.purchase(product.googleId, developerPayload))
       .then((success) => {
         if (success) {
@@ -54,12 +63,15 @@ export default {
         callback(null, payload);
       })
       .catch(callback)
-      .finally(() => InAppBillingBridge.close());
+      .finally(InAppBillingBridge.close);
   },
-  // callback(error, result)
-  subscribe(product, developerPayload = null, callback) {
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+  /**
+   * @param {googleId: string} product which is to be subscribed to
+   * @param {string} the developer payload to be signed by google
+   * @param {funcion} callback with (error, results)
+   */
+  subscribe(product, developerPayload, callback) {
+    inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.subscribe(product.googleId, developerPayload))
       .then((success) => {
         if (success) {
@@ -76,26 +88,79 @@ export default {
           transactionIdentifier: details.purchaseToken,
         };
         callback(null, payload);
-        InAppBillingBridge.close();
       })
       .catch(callback)
-      .finally(() => InAppBillingBridge.close());
+      .finally(InAppBillingBridge.close);
   },
-  // callback(error, result)
+  /**
+   * @param {[{googleId: string}]} list of old products which are to be removed
+   * @param {googleId: string} product which is to be subscribed to
+   * @param {funcion} callback with (error, results)
+   */
+  upgrade: (oldProducts, product, developerPayload, callback) => {
+    inAppBillingSafeOpen()
+      .then(() =>
+        InAppBillingBridge.updateSubscription(
+          oldProducts.map(p => p.googleId),
+          product.googleId,
+          developerPayload,
+        ))
+      .then((success) => {
+        if (success) {
+          return InAppBillingBridge.loadOwnedPurchasesFromGoogle();
+        }
+        throw new Error('Subscription was unsuccessful, please try again');
+      })
+      .then(() => InAppBillingBridge.getSubscriptionTransactionDetails(product.googleId))
+
+      .then((details) => {
+        const payload = {
+          productIdentifier: details.productId,
+          appReceipt: base64.btoa(JSON.stringify(details)),
+          transactionDate: details.purchaseTime,
+          transactionIdentifier: details.purchaseToken,
+        };
+        callback(null, payload);
+      })
+      .catch(callback)
+      .finally(InAppBillingBridge.close);
+  },
+  /**
+   * @param {googleId: string} product which is to be consumed
+   * @param {funcion} callback with (error, results)
+   */
   consume: (product, callback) => {
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+    inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.consumePurchase(product.googleId))
       .then((details) => {
         callback(null, { product, ...details });
       })
       .catch(callback)
-      .finally(() => InAppBillingBridge.close());
+      .finally(InAppBillingBridge.close);
   },
-  // callback(error, result)
+  /**
+   * @param {funcion} callback with (error, results)
+   * @returns {[products, subscriptions]} returns an array containing 2 items.
+   * The first is an array of products owned. The second is an array of
+   * owned subscriptions
+   */
+  loadOwnedPurchases: (callback) => {
+    inAppBillingSafeOpen()
+      .then(() => InAppBillingBridge.loadOwnedPurchasesFromGoogle())
+      .then(() =>
+        Q.all([
+          InAppBillingBridge.listOwnedProducts(),
+          InAppBillingBridge.listOwnedSubscriptions(),
+        ]))
+      .then(ownedLists => callback(null, ownedLists))
+      .catch(callback)
+      .finally(InAppBillingBridge.close);
+  },
+  /**
+   * @param {funcion} callback with (error, results)
+   */
   restore: (callback) => {
-    InAppBillingBridge.close();
-    InAppBillingBridge.open()
+    inAppBillingSafeOpen()
       .then(() => InAppBillingBridge.loadOwnedPurchasesFromGoogle())
       .then(() =>
         Q.all([
@@ -127,7 +192,7 @@ export default {
         callback(null, payload);
       })
       .catch(callback)
-      .finally(() => InAppBillingBridge.close());
+      .finally(InAppBillingBridge.close);
   },
   eventEmitter: {
     addListener: () => {
