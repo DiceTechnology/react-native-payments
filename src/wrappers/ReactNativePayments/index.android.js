@@ -36,7 +36,7 @@ export default {
         callback(null, [].concat.apply([], details));
       })
       .catch(callback)
-      .finally(InAppBillingBridge.close);
+      .finally(() => InAppBillingBridge.close());
   },
   /**
    * @param {googleId: string} product which is to be purchased
@@ -63,7 +63,7 @@ export default {
         callback(null, payload);
       })
       .catch(callback)
-      .finally(InAppBillingBridge.close);
+      .finally(() => InAppBillingBridge.close());
   },
   /**
    * @param {googleId: string} product which is to be subscribed to
@@ -90,7 +90,7 @@ export default {
         callback(null, payload);
       })
       .catch(callback)
-      .finally(InAppBillingBridge.close);
+      .finally(() => InAppBillingBridge.close());
   },
   /**
    * @param {[{googleId: string}]} list of old products which are to be removed
@@ -123,7 +123,7 @@ export default {
         callback(null, payload);
       })
       .catch(callback)
-      .finally(InAppBillingBridge.close);
+      .finally(() => InAppBillingBridge.close());
   },
   /**
    * @param {googleId: string} product which is to be consumed
@@ -136,7 +136,7 @@ export default {
         callback(null, { product, ...details });
       })
       .catch(callback)
-      .finally(InAppBillingBridge.close);
+      .finally(() => InAppBillingBridge.close());
   },
   /**
    * @param {funcion} callback with (error, results)
@@ -154,7 +154,7 @@ export default {
         ]))
       .then(ownedLists => callback(null, ownedLists))
       .catch(callback)
-      .finally(InAppBillingBridge.close);
+      .finally(() => InAppBillingBridge.close());
   },
   /**
    * @param {funcion} callback with (error, results)
@@ -192,7 +192,7 @@ export default {
         callback(null, payload);
       })
       .catch(callback)
-      .finally(InAppBillingBridge.close);
+      .finally(() => InAppBillingBridge.close());
   },
   eventEmitter: {
     addListener: () => {
