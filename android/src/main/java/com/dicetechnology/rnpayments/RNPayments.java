@@ -1,4 +1,4 @@
-package com.idehub.Billing;
+package com.dicetechnology.rnpayment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InAppBillingBridge extends ReactContextBaseJavaModule implements ActivityEventListener, BillingProcessor.IBillingHandler {
+public class RNPayments extends ReactContextBaseJavaModule implements ActivityEventListener, BillingProcessor.IBillingHandler {
 
     public static final int PURCHASE_FLOW_REQUEST_CODE = 32459;
 
@@ -31,7 +31,7 @@ public class InAppBillingBridge extends ReactContextBaseJavaModule implements Ac
     String LICENSE_KEY = null;
     BillingProcessor bp;
 
-    public InAppBillingBridge(ReactApplicationContext reactContext, String licenseKey) {
+    public RNPayments(ReactApplicationContext reactContext, String licenseKey) {
         super(reactContext);
         _reactContext = reactContext;
         LICENSE_KEY = licenseKey;
@@ -39,7 +39,7 @@ public class InAppBillingBridge extends ReactContextBaseJavaModule implements Ac
         reactContext.addActivityEventListener(this);
     }
 
-    public InAppBillingBridge(ReactApplicationContext reactContext) {
+    public RNPayments(ReactApplicationContext reactContext) {
         super(reactContext);
         _reactContext = reactContext;
         int keyResourceId = _reactContext
@@ -52,7 +52,7 @@ public class InAppBillingBridge extends ReactContextBaseJavaModule implements Ac
 
     @Override
     public String getName() {
-        return "InAppBillingBridge";
+        return "RNPayments";
     }
 
     @Override

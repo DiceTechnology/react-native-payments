@@ -1,4 +1,4 @@
-package com.idehub.Billing;
+package com.dicetechnology.rnpayment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,16 +13,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class InAppBillingBridgePackage implements ReactPackage {
+public class RNPaymentsPackage implements ReactPackage {
 
     InAppBillingBridge billingBridge;
 
-    public InAppBillingBridgePackage(String licenseKey) {
+    public RNPaymentsPackage(String licenseKey) {
         _licenseKey = licenseKey;
         _licenseKeySetInConstructor = true;
     }
 
-    public InAppBillingBridgePackage() {
+    public RNPaymentsPackage() {
     }
 
     private String _licenseKey;

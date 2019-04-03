@@ -1,4 +1,4 @@
-package com.idehub.Billing;
+package com.dicetechnology.rnpayment;
 
 public class PromiseConstants {
     public static final String OPEN = "OPEN_PROMISE";
