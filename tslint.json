@@ -1,0 +1,53 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "jsRules": {},
+  "rules": {
+    "indent": [true, "spaces"],
+    "interface-name": [true, "never-prefix"],
+    "quotemark": [true, "single", "jsx-double"],
+    "noUnusedLocals": true,
+    "max-line-length": [true, 100],
+    "curly": false,
+    "ordered-imports": false,
+    "align": false,
+    "object-literal-sort-keys": false,
+    "arrow-parens": false,
+    "object-literal-key-quotes": false,
+    "member-ordering": false,
+    "member-access": false,
+    "jsx-wrap-multiline": false,
+    "jsx-alignment": false,
+    "jsx-no-lambda": false,
+    "jsx-boolean-value": false,
+    "no-console": [true, "log"],
+    "semicolon": [true, "always"],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": {
+          "objects": "never",
+          "arrays": "never",
+          "functions": "never",
+          "typeLiterals": "never"
+        },
+        "esSpecCompliant": true
+      }
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-pascal-case",
+      "allow-leading-underscore"
+    ],
+    "no-namespace": [false]
+  },
+  "rulesDirectory": [],
+  "globals": {
+    "__DEV__": true
+  },
+  "linterOptions": {
+    "exclude": ["**/*.spec.ts.snap"]
+  }
+}

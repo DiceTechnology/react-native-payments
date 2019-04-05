@@ -1,4 +1,4 @@
-package com.dicetechnology.rnpayment;
+package com.dicetechnology.rnpayments;
 
 public class PromiseConstants {
     public static final String OPEN = "OPEN_PROMISE";

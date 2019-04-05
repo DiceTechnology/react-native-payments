@@ -1,13 +1,12 @@
-package com.dicetechnology.rnpayment;
+package com.dicetechnology.rnpayments;
 
 import android.app.Activity;
 import android.content.Intent;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.PurchaseData;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.anjlab.android.iab.v3.PurchaseData;
-
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -27,13 +26,13 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
 
     public static final int PURCHASE_FLOW_REQUEST_CODE = 32459;
 
-    ReactApplicationContext _reactContext;
+    ReactApplicationContext reactContext;
     String LICENSE_KEY = null;
     BillingProcessor bp;
 
     public RNPayments(ReactApplicationContext reactContext, String licenseKey) {
         super(reactContext);
-        _reactContext = reactContext;
+        this.reactContext = reactContext;
         LICENSE_KEY = licenseKey;
 
         reactContext.addActivityEventListener(this);
@@ -41,11 +40,11 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
 
     public RNPayments(ReactApplicationContext reactContext) {
         super(reactContext);
-        _reactContext = reactContext;
-        int keyResourceId = _reactContext
+        this.reactContext = reactContext;
+        int keyResourceId = this.reactContext
                 .getResources()
-                .getIdentifier("RNB_GOOGLE_PLAY_LICENSE_KEY", "string", _reactContext.getPackageName());
-        LICENSE_KEY = _reactContext.getString(keyResourceId);
+                .getIdentifier("RNB_GOOGLE_PLAY_LICENSE_KEY", "string", this.reactContext.getPackageName());
+        LICENSE_KEY = this.reactContext.getString(keyResourceId);
 
         reactContext.addActivityEventListener(this);
     }
@@ -67,13 +66,13 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void open(final Promise promise){
+    public void open(final Promise promise) {
         if (isIabServiceAvailable()) {
             if (bp == null) {
                 clearPromises();
                 if (putPromise(PromiseConstants.OPEN, promise)) {
                     try {
-                        bp = new BillingProcessor(_reactContext, LICENSE_KEY, this);
+                        bp = new BillingProcessor(reactContext, LICENSE_KEY, this);
                     } catch (Exception ex) {
                         rejectPromise(PromiseConstants.OPEN, "Failure on open: " + ex.getMessage());
                     }
@@ -89,7 +88,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void close(final Promise promise){
+    public void close(final Promise promise) {
         if (bp != null) {
             bp.release();
             bp = null;
@@ -100,19 +99,18 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void loadOwnedPurchasesFromGoogle(final Promise promise){
-      if (bp != null) {
-          bp.loadOwnedPurchasesFromGoogle();
-          promise.resolve(true);
-      } else {
-          promise.reject("EUNSPECIFIED", "Channel is not opened. Call open() on InAppBilling.");
-      }
+    public void loadOwnedPurchasesFromGoogle(final Promise promise) {
+        if (bp != null) {
+            bp.loadOwnedPurchasesFromGoogle();
+            promise.resolve(true);
+        } else {
+            promise.reject("EUNSPECIFIED", "Channel is not opened. Call open() on InAppBilling.");
+        }
     }
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
-        if (details != null && productId.equals(details.purchaseInfo.purchaseData.productId))
-        {
+        if (details != null && productId.equals(details.purchaseInfo.purchaseData.productId)) {
             try {
                 WritableMap map = mapTransactionDetails(details);
                 resolvePromise(PromiseConstants.PURCHASE_OR_SUBSCRIBE, map);
@@ -131,7 +129,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void purchase(final String productId, final String developerPayload, final Promise promise){
+    public void purchase(final String productId, final String developerPayload, final Promise promise) {
         if (bp != null) {
             if (putPromise(PromiseConstants.PURCHASE_OR_SUBSCRIBE, promise)) {
                 boolean purchaseProcessStarted = bp.purchase(getCurrentActivity(), productId, developerPayload);
@@ -163,7 +161,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void subscribe(final String productId, final String developerPayload, final Promise promise){
+    public void subscribe(final String productId, final String developerPayload, final Promise promise) {
         if (bp != null) {
             if (putPromise(PromiseConstants.PURCHASE_OR_SUBSCRIBE, promise)) {
                 boolean subscribeProcessStarted = bp.subscribe(getCurrentActivity(), productId, developerPayload);
@@ -178,7 +176,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void updateSubscription(final ReadableArray oldProductIds, final String productId, final String developerPayload, final Promise promise){
+    public void updateSubscription(final ReadableArray oldProductIds, final String productId, final String developerPayload, final Promise promise) {
         if (bp != null) {
             if (putPromise(PromiseConstants.PURCHASE_OR_SUBSCRIBE, promise)) {
                 ArrayList<String> oldProductIdList = new ArrayList<>();
@@ -199,7 +197,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void isSubscribed(final String productId, final Promise promise){
+    public void isSubscribed(final String productId, final Promise promise) {
         if (bp != null) {
             boolean subscribed = bp.isSubscribed(productId);
             promise.resolve(subscribed);
@@ -209,7 +207,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void isPurchased(final String productId, final Promise promise){
+    public void isPurchased(final String productId, final Promise promise) {
         if (bp != null) {
             boolean purchased = bp.isPurchased(productId);
             promise.resolve(purchased);
@@ -219,7 +217,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void listOwnedProducts(final Promise promise){
+    public void listOwnedProducts(final Promise promise) {
         if (bp != null) {
             List<String> purchasedProductIds = bp.listOwnedProducts();
             WritableArray arr = Arguments.createArray();
@@ -235,7 +233,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @ReactMethod
-    public void listOwnedSubscriptions(final Promise promise){
+    public void listOwnedSubscriptions(final Promise promise) {
         if (bp != null) {
             List<String> ownedSubscriptionsIds = bp.listOwnedSubscriptions();
             WritableArray arr = Arguments.createArray();
@@ -345,10 +343,9 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     public void getPurchaseTransactionDetails(final String productId, final Promise promise) {
         if (bp != null) {
             TransactionDetails details = bp.getPurchaseTransactionDetails(productId);
-            if (details != null && productId.equals(details.purchaseInfo.purchaseData.productId))
-            {
-                  WritableMap map = mapTransactionDetails(details);
-                  promise.resolve(map);
+            if (details != null && productId.equals(details.purchaseInfo.purchaseData.productId)) {
+                WritableMap map = mapTransactionDetails(details);
+                promise.resolve(map);
             } else {
                 promise.reject("EUNSPECIFIED", "Could not find transaction details for productId.");
             }
@@ -361,10 +358,9 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     public void getSubscriptionTransactionDetails(final String productId, final Promise promise) {
         if (bp != null) {
             TransactionDetails details = bp.getSubscriptionTransactionDetails(productId);
-            if (details != null && productId.equals(details.purchaseInfo.purchaseData.productId))
-            {
-                  WritableMap map = mapTransactionDetails(details);
-                  promise.resolve(map);
+            if (details != null && productId.equals(details.purchaseInfo.purchaseData.productId)) {
+                WritableMap map = mapTransactionDetails(details);
+                promise.resolve(map);
             } else {
                 promise.reject("EUNSPECIFIED", "Could not find transaction details for productId.");
             }
@@ -387,9 +383,9 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
         map.putString("orderId", purchaseData.orderId);
         map.putString("purchaseToken", purchaseData.purchaseToken);
         map.putString("purchaseTime", purchaseData.purchaseTime == null
-          ? "" : purchaseData.purchaseTime.toString());
+                ? "" : purchaseData.purchaseTime.toString());
         map.putString("purchaseState", purchaseData.purchaseState == null
-          ? "" : purchaseData.purchaseState.toString());
+                ? "" : purchaseData.purchaseState.toString());
 
 
         if (purchaseData.developerPayload != null)
@@ -407,7 +403,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     private Boolean isIabServiceAvailable() {
-        return BillingProcessor.isIabServiceAvailable(_reactContext);
+        return BillingProcessor.isIabServiceAvailable(reactContext);
     }
 
     @Override
@@ -425,7 +421,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
     }
 
     @Override
-    public void onNewIntent(Intent intent){
+    public void onNewIntent(Intent intent) {
 
     }
 

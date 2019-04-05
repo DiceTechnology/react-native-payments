@@ -10,6 +10,8 @@
 		48C6529F200B81C400A3795C /* RNPayments.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C6529E200B81C400A3795C /* RNPayments.m */; };
 		48C652A0200B81C400A3795C /* RNPayments.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 48C6529D200B81C400A3795C /* RNPayments.h */; };
 		48C652A8200B824C00A3795C /* SKProduct+StringPrice.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C652A7200B824C00A3795C /* SKProduct+StringPrice.m */; };
+		D1033C8E225757830073B620 /* RNPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = D1033C8D225757830073B620 /* RNPromise.m */; };
+		D1033C8F225757830073B620 /* RNPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = D1033C8D225757830073B620 /* RNPromise.m */; };
 		D14181932254E1FD009CE9B4 /* RNPayments.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C6529E200B81C400A3795C /* RNPayments.m */; };
 		D14181942254E200009CE9B4 /* SKProduct+StringPrice.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C652A7200B824C00A3795C /* SKProduct+StringPrice.m */; };
 /* End PBXBuildFile section */
@@ -42,6 +44,8 @@
 		48C6529E200B81C400A3795C /* RNPayments.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNPayments.m; sourceTree = "<group>"; };
 		48C652A6200B824C00A3795C /* SKProduct+StringPrice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SKProduct+StringPrice.h"; sourceTree = "<group>"; };
 		48C652A7200B824C00A3795C /* SKProduct+StringPrice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SKProduct+StringPrice.m"; sourceTree = "<group>"; };
+		D1033C8C225757830073B620 /* RNPromise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNPromise.h; sourceTree = "<group>"; };
+		D1033C8D225757830073B620 /* RNPromise.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNPromise.m; sourceTree = "<group>"; };
 		D141818A2254E1EF009CE9B4 /* libRNPayments-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRNPayments-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -87,6 +91,8 @@
 				48C6529E200B81C400A3795C /* RNPayments.m */,
 				48C652A6200B824C00A3795C /* SKProduct+StringPrice.h */,
 				48C652A7200B824C00A3795C /* SKProduct+StringPrice.m */,
+				D1033C8C225757830073B620 /* RNPromise.h */,
+				D1033C8D225757830073B620 /* RNPromise.m */,
 			);
 			path = RNPayments;
 			sourceTree = "<group>";
@@ -170,6 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1033C8E225757830073B620 /* RNPromise.m in Sources */,
 				48C6529F200B81C400A3795C /* RNPayments.m in Sources */,
 				48C652A8200B824C00A3795C /* SKProduct+StringPrice.m in Sources */,
 			);
@@ -179,6 +186,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1033C8F225757830073B620 /* RNPromise.m in Sources */,
 				D14181942254E200009CE9B4 /* SKProduct+StringPrice.m in Sources */,
 				D14181932254E1FD009CE9B4 /* RNPayments.m in Sources */,
 			);
