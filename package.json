@@ -1,6 +1,6 @@
 {
   "name": "react-native-payments",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "description": "Wrapper for react-native iOS in-app-purchases and Android in-app-billing.",
   "main": "index.js",
   "scripts": {
