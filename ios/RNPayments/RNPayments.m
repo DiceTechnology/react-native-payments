@@ -16,12 +16,14 @@ NSString *const RNPaymentsTransaction = @"RNPaymentsTransaction";
 {
     NSArray *products;
     NSMutableDictionary<NSString *, RNPromise *> *_promises;
+    NSMutableDictionary<NSString *, SKProductsRequest *> *_requests;
 }
 
 - (instancetype)init
 {
     if ((self = [super init])) {
-        _promises = [[NSMutableDictionary alloc] init];
+        _promises = [NSMutableDictionary new];
+        _requests = [NSMutableDictionary new];
         [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
     }
     return self;
@@ -208,7 +210,9 @@ RCT_EXPORT_METHOD(loadProducts:(NSArray *)productIdentifiers
     SKProductsRequest *productsRequest = [[SKProductsRequest alloc]
                                           initWithProductIdentifiers:[NSSet setWithArray:productIdentifiers]];
     productsRequest.delegate = self;
-    _promises[RCTKeyForInstance(productsRequest)] = [[RNPromise alloc] initWithResolver: resolve rejector: reject];
+    NSString *key = RCTKeyForInstance(productsRequest);
+    _promises[key] = [[RNPromise alloc] initWithResolver: resolve rejector: reject];
+    _requests[key] = productsRequest;
     [productsRequest start];
 }
 
@@ -231,6 +235,7 @@ RCT_EXPORT_METHOD(receiptData:(RCTPromiseResolveBlock)resolve
     }
 }
 
+# pragma SKProductsRequestDelegate
 // SKProductsRequestDelegate protocol method
 - (void)productsRequest:(SKProductsRequest *)request
      didReceiveResponse:(SKProductsResponse *)response
@@ -259,6 +264,10 @@ RCT_EXPORT_METHOD(receiptData:(RCTPromiseResolveBlock)resolve
     } else {
         RCTLogWarn(@"No callback registered for load product request.");
     }
+    
+    if (_requests[key]) {
+        [_requests removeObjectForKey:key];
+    }
 }
 
 // SKProductsRequestDelegate network error
@@ -270,7 +279,17 @@ RCT_EXPORT_METHOD(receiptData:(RCTPromiseResolveBlock)resolve
         promise.reject(codeWithDomain, error.localizedDescription, error);
         [_promises removeObjectForKey:key];
     }
+    if (_requests[key]) {
+        [_requests removeObjectForKey:key];
+    }
 }
+
+- (void)dealloc
+{
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
+}
+
+#pragma mark Private
 
 - (NSDictionary *)getPurchaseData:(SKPaymentTransaction *)transaction {
     NSMutableDictionary *purchase = [NSMutableDictionary dictionaryWithDictionary: @{
@@ -294,13 +313,6 @@ RCT_EXPORT_METHOD(receiptData:(RCTPromiseResolveBlock)resolve
     
     return purchase;
 }
-
-- (void)dealloc
-{
-    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
-}
-
-#pragma mark Private
 
 static NSString *RCTKeyForInstance(id instance)
 {
