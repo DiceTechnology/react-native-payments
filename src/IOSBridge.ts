@@ -6,33 +6,25 @@ const { RNPayments } = NativeModules;
 export class IOSBridge implements IBridge {
   public eventEmitter = new NativeEventEmitter(RNPayments);
 
-  async loadProducts(products: IProduct[]) {
-    const appleProducts = products.reduce(
-      (acc, i) => {
-        if (i.appleId != null) {
-          acc.push(i.appleId);
-        }
-        return acc;
-      },
-      [] as string[]
-    );
-    return await RNPayments.loadProducts(appleProducts);
+  async loadProducts(products: TProductId[]) {
+    const validProducts = products.filter(p => p !== null && p !== undefined);
+    return await RNPayments.loadProducts(validProducts);
   }
 
-  async purchase(product: IProduct, developerPayload: string) {
-    return await RNPayments.purchaseProduct(product.appleId);
+  async purchase(product: TProductId, developerPayload: string) {
+    return await RNPayments.purchaseProduct(product);
   }
 
-  async subscribe(product: IProduct, developerPayload: string) {
-    return await RNPayments.purchaseProduct(product.appleId);
+  async subscribe(product: TProductId, developerPayload: string) {
+    return await RNPayments.purchaseProduct(product);
   }
 
   async upgrade(
-    oldProducts: IProduct[],
-    product: IProduct,
+    oldProducts: TProductId[],
+    product: TProductId,
     developerPayload: string
   ) {
-    return await RNPayments.purchaseProduct(product.appleId);
+    return await RNPayments.purchaseProduct(product);
   }
 
   async loadOwnedPurchases() {

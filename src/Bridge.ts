@@ -1,13 +1,13 @@
 export interface IBridge {
-  loadProducts(products: IProduct[]): Promise<any>;
+  loadProducts(productIds: TProductId[]): Promise<any>;
 
-  purchase(product: IProduct, developerPayload: string): Promise<any>;
+  purchase(productId: TProductId, developerPayload: string): Promise<any>;
 
-  subscribe(product: IProduct, developerPayload: string): Promise<any>;
+  subscribe(productId: TProductId, developerPayload: string): Promise<any>;
 
   upgrade(
-    oldProducts: IProduct[],
-    product: IProduct,
+    oldProductIds: TProductId[],
+    productId: TProductId,
     developerPayload: string
   ): Promise<any>;
 

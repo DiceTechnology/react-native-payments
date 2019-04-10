@@ -4,7 +4,4 @@ interface ITransactionAndroid {
   purchaseToken: string;
 }
 
-interface IProduct {
-  appleId?: string;
-  googleId?: string;
-}
+type TProductId = string;

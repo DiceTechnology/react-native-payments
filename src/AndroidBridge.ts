@@ -7,27 +7,20 @@ const { RNPayments } = NativeModules;
 export class AndroidBridge implements IBridge {
   public eventEmitter = new NativeEventEmitter(RNPayments);
 
-  async loadProducts(products: IProduct[]) {
-    const googleProducts = products.reduce(
-      (acc, i) => {
-        if (i.googleId != null) {
-          acc.push(i.googleId);
-        }
-        return acc;
-      },
-      [] as string[]
+  async loadProducts(productIds: TProductId[]) {
+    const validProductIds = productIds.filter(
+      p => p !== null && p !== undefined
     );
 
-    if (googleProducts.length === 0) {
+    if (validProductIds.length === 0) {
       return [];
     }
 
     try {
       await AndroidBridge.open();
-      await RNPayments.open();
       const details = await Promise.all([
-        RNPayments.getProductDetails(googleProducts),
-        RNPayments.getSubscriptionDetails(googleProducts)
+        RNPayments.getProductDetails(validProductIds),
+        RNPayments.getSubscriptionDetails(validProductIds)
       ]);
       return [].concat.apply([], details);
     } catch (err) {
@@ -37,13 +30,10 @@ export class AndroidBridge implements IBridge {
     }
   }
 
-  async purchase(product: IProduct, developerPayload: string) {
+  async purchase(productId: TProductId, developerPayload: string) {
     try {
       await AndroidBridge.open();
-      const success = await RNPayments.purchase(
-        product.googleId,
-        developerPayload
-      );
+      const success = await RNPayments.purchase(productId, developerPayload);
       if (success) {
         await RNPayments.loadOwnedPurchasesFromGoogle();
         const details = await RNPayments.loadOwnedPurchasesFromGoogle();
@@ -63,16 +53,13 @@ export class AndroidBridge implements IBridge {
     }
   }
 
-  async subscribe(product: IProduct, developerPayload: string) {
+  async subscribe(productId: TProductId, developerPayload: string) {
     try {
-      const success = await RNPayments.subscribe(
-        product.googleId,
-        developerPayload
-      );
+      const success = await RNPayments.subscribe(productId, developerPayload);
       if (success) {
         await RNPayments.loadOwnedPurchasesFromGoogle();
         const details = await RNPayments.getSubscriptionTransactionDetails(
-          product.googleId
+          productId
         );
         const payload = {
           productIdentifier: details.productId,
@@ -92,21 +79,21 @@ export class AndroidBridge implements IBridge {
   }
 
   async upgrade(
-    oldProducts: IProduct[],
-    product: IProduct,
+    oldProductIds: TProductId[],
+    productId: TProductId,
     developerPayload: string
   ) {
     try {
       await AndroidBridge.open();
       const success = RNPayments.updateSubscription(
-        oldProducts.map(p => p.googleId),
-        product.googleId,
+        oldProductIds,
+        productId,
         developerPayload
       );
       if (success) {
         await RNPayments.loadOwnedPurchasesFromGoogle();
         const details = await RNPayments.getSubscriptionTransactionDetails(
-          product.googleId
+          productId
         );
         const payload = {
           productIdentifier: details.productId,
@@ -124,10 +111,10 @@ export class AndroidBridge implements IBridge {
     }
   }
 
-  async consume(product: IProduct) {
+  async consume(productId: TProductId) {
     try {
-      const details = await RNPayments.consumePurchase(product.googleId);
-      return { product, ...details };
+      const details = await RNPayments.consumePurchase(productId);
+      return { productId, ...details };
     } finally {
       await RNPayments.close();
     }
