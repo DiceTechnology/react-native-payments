@@ -265,13 +265,13 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
                         if (detail != null) {
                             WritableMap map = Arguments.createMap();
 
-                            map.putString("productId", detail.productId);
+                            map.putString("id", detail.productId);
                             map.putString("title", detail.title);
                             map.putString("description", detail.description);
+                            map.putString("currencyCode", detail.currency);
+                            map.putDouble("price", detail.priceValue);
+                            map.putString("priceString", detail.priceText);
                             map.putBoolean("isSubscription", detail.isSubscription);
-                            map.putString("currency", detail.currency);
-                            map.putDouble("priceValue", detail.priceValue);
-                            map.putString("priceText", detail.priceText);
                             arr.pushMap(map);
                         }
                     }
@@ -305,18 +305,18 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
                         if (detail != null) {
                             WritableMap map = Arguments.createMap();
 
-                            map.putString("productId", detail.productId);
+                            map.putString("id", detail.productId);
                             map.putString("title", detail.title);
                             map.putString("description", detail.description);
+                            map.putString("currencyCode", detail.currency);
+                            map.putDouble("price", detail.priceValue);
+                            map.putString("priceString", detail.priceText);
                             map.putBoolean("isSubscription", detail.isSubscription);
-                            map.putString("currency", detail.currency);
-                            map.putDouble("priceValue", detail.priceValue);
-                            map.putString("priceText", detail.priceText);
                             map.putString("subscriptionPeriod", detail.subscriptionPeriod);
                             if (detail.subscriptionFreeTrialPeriod != null)
                                 map.putString("subscriptionFreeTrialPeriod", detail.subscriptionFreeTrialPeriod);
                             map.putBoolean("haveTrialPeriod", detail.haveTrialPeriod);
-                            map.putDouble("introductoryPriceValue", detail.introductoryPriceValue);
+                            map.putDouble("introductoryPrice", detail.introductoryPriceValue);
                             if (detail.introductoryPriceText != null)
                                 map.putString("introductoryPriceText", detail.introductoryPriceText);
                             if (detail.introductoryPricePeriod != null)
@@ -381,10 +381,10 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
 
         map.putString("productId", purchaseData.productId);
         map.putString("orderId", purchaseData.orderId);
-        map.putString("purchaseToken", purchaseData.purchaseToken);
-        map.putString("purchaseTime", purchaseData.purchaseTime == null
+        map.putString("id", purchaseData.purchaseToken);
+        map.putString("transactionDate", purchaseData.purchaseTime == null
                 ? "" : purchaseData.purchaseTime.toString());
-        map.putString("purchaseState", purchaseData.purchaseState == null
+        map.putString("transactionState", purchaseData.purchaseState == null
                 ? "" : purchaseData.purchaseState.toString());
 
 
@@ -406,8 +406,12 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
         return BillingProcessor.isIabServiceAvailable(reactContext);
     }
 
-    @Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+        onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode != PromiseConstants.PURCHASE_FLOW_REQUEST_CODE) {
             return;
         }
@@ -420,7 +424,6 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
         }
     }
 
-    @Override
     public void onNewIntent(Intent intent) {
 
     }

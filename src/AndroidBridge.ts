@@ -7,7 +7,7 @@ const { RNPayments } = NativeModules;
 export class AndroidBridge implements IBridge {
   public eventEmitter = new NativeEventEmitter(RNPayments);
 
-  async loadProducts(productIds: TProductId[]) {
+  async loadProducts(productIds: TProductId[]): Promise<IProduct[]> {
     const validProductIds = productIds.filter(
       p => p !== null && p !== undefined
     );
@@ -30,22 +30,29 @@ export class AndroidBridge implements IBridge {
     }
   }
 
-  async purchase(productId: TProductId, developerPayload: string) {
+  async purchase(
+    productId: TProductId,
+    developerPayload: string
+  ): Promise<ITransaction> {
     try {
       await AndroidBridge.open();
-      const success = await RNPayments.purchase(productId, developerPayload);
+      let success = await RNPayments.purchase(productId, developerPayload);
       if (success) {
-        await RNPayments.loadOwnedPurchasesFromGoogle();
-        const details = await RNPayments.loadOwnedPurchasesFromGoogle();
+        success = await RNPayments.loadOwnedPurchasesFromGoogle();
+      }
+      if (success) {
+        const details = await RNPayments.getPurchaseTransactionDetails(
+          productId
+        );
         return {
-          productIdentifier: details.productId,
+          productId: details.productId,
           appReceipt: base64.btoa(JSON.stringify(details)),
           transactionDate: details.purchaseTime,
-          transactionIdentifier: details.purchaseToken
+          id: details.purchaseToken
         };
-      } else {
-        throw new Error('Purchase was unsuccessful, please try again');
       }
+
+      throw new Error('Purchase was unsuccessful, please try again');
     } catch (err) {
       throw err;
     } finally {
@@ -53,7 +60,10 @@ export class AndroidBridge implements IBridge {
     }
   }
 
-  async subscribe(productId: TProductId, developerPayload: string) {
+  async subscribe(
+    productId: TProductId,
+    developerPayload: string
+  ): Promise<ITransaction> {
     try {
       const success = await RNPayments.subscribe(productId, developerPayload);
       if (success) {
@@ -61,13 +71,12 @@ export class AndroidBridge implements IBridge {
         const details = await RNPayments.getSubscriptionTransactionDetails(
           productId
         );
-        const payload = {
-          productIdentifier: details.productId,
+        return {
+          productId: details.productId,
           appReceipt: base64.btoa(JSON.stringify(details)),
           transactionDate: details.purchaseTime,
-          transactionIdentifier: details.purchaseToken
+          id: details.purchaseToken
         };
-        return payload;
       } else {
         throw new Error('Subscription was unsuccessful, please try again');
       }

@@ -247,15 +247,15 @@ RCT_EXPORT_METHOD(receiptData:(RCTPromiseResolveBlock)resolve
         NSMutableArray *productsArrayForJS = [NSMutableArray array];
         for(SKProduct *item in response.products) {
             NSDictionary *product = @{
-                                      @"identifier": item.productIdentifier,
-                                      @"price": item.price,
-                                      @"currencySymbol": [item.priceLocale objectForKey:NSLocaleCurrencySymbol],
-                                      @"currencyCode": [item.priceLocale objectForKey:NSLocaleCurrencyCode],
-                                      @"priceString": item.priceString,
-                                      @"countryCode": [item.priceLocale objectForKey: NSLocaleCountryCode],
-                                      @"downloadable": item.downloadable ? @"true" : @"false" ,
+                                      @"id": item.productIdentifier,
                                       @"description": item.localizedDescription ? item.localizedDescription : @"",
                                       @"title": item.localizedTitle ? item.localizedTitle : @"",
+                                      @"price": item.price,
+                                      @"priceString": item.priceString,
+                                      @"currencyCode": [item.priceLocale objectForKey:NSLocaleCurrencyCode],
+                                      @"currencySymbol": [item.priceLocale objectForKey:NSLocaleCurrencySymbol],
+                                      @"countryCode": [item.priceLocale objectForKey: NSLocaleCountryCode],
+                                      @"downloadable": item.downloadable ? @"true" : @"false" ,
                                       };
             [productsArrayForJS addObject:product];
         }
@@ -294,15 +294,15 @@ RCT_EXPORT_METHOD(receiptData:(RCTPromiseResolveBlock)resolve
 - (NSDictionary *)getPurchaseData:(SKPaymentTransaction *)transaction {
     NSMutableDictionary *purchase = [NSMutableDictionary dictionaryWithDictionary: @{
                                                                                      @"transactionDate": @(transaction.transactionDate.timeIntervalSince1970 * 1000),
-                                                                                     @"transactionIdentifier": transaction.transactionIdentifier,
-                                                                                     @"productIdentifier": transaction.payment.productIdentifier,
+                                                                                     @"id": transaction.transactionIdentifier,
+                                                                                     @"productId": transaction.payment.productIdentifier,
                                                                                      @"transactionReceipt": [[transaction transactionReceipt] base64EncodedStringWithOptions:0]
                                                                                      }];
     // originalTransaction is available for restore purchase and purchase of cancelled/expired subscriptions
     SKPaymentTransaction *originalTransaction = transaction.originalTransaction;
     if (originalTransaction) {
         purchase[@"originalTransactionDate"] = @(originalTransaction.transactionDate.timeIntervalSince1970 * 1000);
-        purchase[@"originalTransactionIdentifier"] = originalTransaction.transactionIdentifier;
+        purchase[@"originalTransactionId"] = originalTransaction.transactionIdentifier;
     }
     
     NSURL *receiptUrl = [[NSBundle mainBundle] appStoreReceiptURL];
