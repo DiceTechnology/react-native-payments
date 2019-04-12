@@ -1,6 +1,12 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import base64 from './utils/base64';
 import { IBridge } from './Bridge';
+import {
+  IProduct,
+  ITransaction,
+  ITransactionNativeAndroid,
+  TProductId
+} from './type';
 
 const { RNPayments } = NativeModules;
 
@@ -41,7 +47,7 @@ export class AndroidBridge implements IBridge {
         success = await RNPayments.loadOwnedPurchasesFromGoogle();
       }
       if (success) {
-        const details = await RNPayments.getPurchaseTransactionDetails(
+        const details: ITransactionNativeAndroid = await RNPayments.getPurchaseTransactionDetails(
           productId
         );
         return {
@@ -68,7 +74,7 @@ export class AndroidBridge implements IBridge {
       const success = await RNPayments.subscribe(productId, developerPayload);
       if (success) {
         await RNPayments.loadOwnedPurchasesFromGoogle();
-        const details = await RNPayments.getSubscriptionTransactionDetails(
+        const details: ITransactionNativeAndroid = await RNPayments.getSubscriptionTransactionDetails(
           productId
         );
         return {
@@ -91,7 +97,7 @@ export class AndroidBridge implements IBridge {
     oldProductIds: TProductId[],
     productId: TProductId,
     developerPayload: string
-  ) {
+  ): Promise<ITransaction> {
     try {
       await AndroidBridge.open();
       const success = RNPayments.updateSubscription(
@@ -101,16 +107,15 @@ export class AndroidBridge implements IBridge {
       );
       if (success) {
         await RNPayments.loadOwnedPurchasesFromGoogle();
-        const details = await RNPayments.getSubscriptionTransactionDetails(
+        const details: ITransactionNativeAndroid = await RNPayments.getSubscriptionTransactionDetails(
           productId
         );
-        const payload = {
-          productIdentifier: details.productId,
+        return {
+          productId: details.productId,
           appReceipt: base64.btoa(JSON.stringify(details)),
           transactionDate: details.purchaseTime,
-          transactionIdentifier: details.purchaseToken
+          id: details.purchaseToken
         };
-        return payload as any;
       }
       throw new Error(
         'Subscription upgrade/downgrade was unsuccessful, please try again'
@@ -135,44 +140,44 @@ export class AndroidBridge implements IBridge {
       await RNPayments.loadOwnedPurchasesFromGoogle();
       const ownedProducts = await RNPayments.listOwnedProducts();
       const ownedSubscriptions = await RNPayments.listOwnedSubscriptions();
-      const ownedLists = [ownedProducts, ownedSubscriptions];
-      return ownedLists;
+      return [ownedProducts, ownedSubscriptions];
     } finally {
       await RNPayments.close();
     }
   }
 
-  async restore() {
+  async restore(): Promise<ITransaction[]> {
     try {
       await AndroidBridge.open();
       await RNPayments.loadOwnedPurchasesFromGoogle();
       const products = await RNPayments.listOwnedProducts();
       const subscriptions = await RNPayments.listOwnedSubscriptions();
-      let transactionsRequest: Promise<ITransactionAndroid>[] = [];
+      let transactionsRequest: Promise<ITransactionNativeAndroid>[] = [];
       if (Array.isArray(products) && products.length > 0) {
-        const productTransactions = products.map(p =>
-          RNPayments.getPurchaseTransactionDetails(p)
-        );
+        const productTransactions: Promise<
+          ITransactionNativeAndroid
+        >[] = products.map(p => RNPayments.getPurchaseTransactionDetails(p));
         transactionsRequest = transactionsRequest.concat(productTransactions);
       }
       if (Array.isArray(subscriptions) && subscriptions.length > 0) {
-        const subscriptionTransactions = subscriptions.map(s =>
+        const subscriptionTransactions: Promise<
+          ITransactionNativeAndroid
+        >[] = subscriptions.map(s =>
           RNPayments.getSubscriptionTransactionDetails(s)
         );
         transactionsRequest = transactionsRequest.concat(
           subscriptionTransactions
         );
       }
-      const transactions: ITransactionAndroid[] = await Promise.all(
+      const transactions: ITransactionNativeAndroid[] = await Promise.all(
         transactionsRequest
       );
-      const payload = transactions.map(t => ({
-        productIdentifier: t.productId,
+      return transactions.map(t => ({
+        productId: t.productId,
         appReceipt: base64.btoa(JSON.stringify(t)),
-        transactionDate: t.purchaseTime,
-        transactionIdentifier: t.purchaseToken
+        transactionDate: t.purchaseDate,
+        id: t.purchaseToken
       }));
-      return payload;
     } finally {
       await RNPayments.close();
     }

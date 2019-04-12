@@ -1,3 +1,5 @@
+import { IProduct, ITransaction, TProductId } from './type';
+
 export interface IBridge {
   loadProducts(productIds: TProductId[]): Promise<IProduct[]>;
 
@@ -15,7 +17,7 @@ export interface IBridge {
     oldProductIds: TProductId[],
     productId: TProductId,
     developerPayload: string
-  ): Promise<any>;
+  ): Promise<ITransaction>;
 
   loadOwnedPurchases(): Promise<any>;
 

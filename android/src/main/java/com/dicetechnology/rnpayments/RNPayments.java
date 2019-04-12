@@ -381,10 +381,10 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
 
         map.putString("productId", purchaseData.productId);
         map.putString("orderId", purchaseData.orderId);
-        map.putString("id", purchaseData.purchaseToken);
-        map.putString("transactionDate", purchaseData.purchaseTime == null
+        map.putString("purchaseToken", purchaseData.purchaseToken);
+        map.putString("purchaseTime", purchaseData.purchaseTime == null
                 ? "" : purchaseData.purchaseTime.toString());
-        map.putString("transactionState", purchaseData.purchaseState == null
+        map.putString("purchaseState", purchaseData.purchaseState == null
                 ? "" : purchaseData.purchaseState.toString());
 
 

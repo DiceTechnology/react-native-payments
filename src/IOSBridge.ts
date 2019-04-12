@@ -1,5 +1,6 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import { IBridge } from './Bridge';
+import { IProduct, ITransaction, TProductId } from './type';
 
 const { RNPayments } = NativeModules;
 

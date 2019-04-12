@@ -1,4 +1,5 @@
 import { IBridge } from './Bridge';
+import { IProduct, ITransaction, TProductId } from './type';
 export declare class IOSBridge implements IBridge {
     eventEmitter: import("react-native").EventEmitter;
     loadProducts(products: TProductId[]): Promise<IProduct[]>;

@@ -1,12 +1,7 @@
-interface ITransactionAndroid {
-    productId: string;
-    purchaseTime: string;
-    purchaseToken: string;
-}
-declare type TBase64 = string;
-declare type TId = string;
-declare type TProductId = string;
-interface IProduct {
+export declare type TBase64 = string;
+export declare type TId = string;
+export declare type TProductId = string;
+export interface IProduct {
     id: string;
     description: string;
     title: string;
@@ -14,9 +9,20 @@ interface IProduct {
     priceString: string;
     currencyCode: string;
 }
-interface ITransaction {
+export interface ITransaction {
     id: TId;
     productId: TProductId;
     appReceipt: TBase64;
-    transactionDate: number;
+    transactionDate: string;
+}
+export interface ITransactionNativeAndroid {
+    receiptData: string;
+    receiptSignature?: string;
+    purchaseDate: any;
+    productId: string;
+    orderId: string;
+    purchaseToken: string;
+    purchaseTime: string;
+    purchaseState: string;
+    developerPayload?: string;
 }
