@@ -35,9 +35,7 @@
     "url": "https://github.com/bahmanasadi/react-native-payments/issues"
   },
   "homepage": "https://github.com/bahmanasadi/react-native-payments#readme",
-  "dependencies": {
-    "react-native": "^0.59.3"
-  },
+  "dependencies": {},
   "lint-staged": {
     "*.ts*": [
       "prettier --debug-check --print-width=85",

@@ -12,10 +12,27 @@ export interface IProduct {
 export interface ITransaction {
     id: TId;
     productId: TProductId;
-    appReceipt: TBase64;
     transactionDate: string;
 }
-export interface ITransactionNativeAndroid {
+export interface ITransactionApple extends ITransaction {
+    appReceipt: TBase64;
+}
+export interface ITransactionGoogle extends ITransaction {
+    appReceipt: TBase64;
+}
+export interface ITransactionAmazon extends ITransaction {
+    userId: string;
+}
+export declare function isTransactionApple(t: ITransaction): t is ITransactionApple;
+export declare function isTransactionGoogle(t: ITransaction): t is ITransactionGoogle;
+export declare function isTransactionAmazon(t: ITransaction): t is ITransactionAmazon;
+export declare enum AppStore {
+    APPLE = 0,
+    AMAZON = 1,
+    GOOGLE = 2,
+    UNKNOWN = 3
+}
+export interface ITransactionNativeGoogle {
     receiptData: string;
     receiptSignature?: string;
     purchaseDate: any;

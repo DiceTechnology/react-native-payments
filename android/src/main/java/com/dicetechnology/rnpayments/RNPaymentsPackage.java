@@ -2,54 +2,63 @@ package com.dicetechnology.rnpayments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import com.facebook.react.ReactPackage;
+import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class RNPaymentsPackage implements ReactPackage {
 
-    RNPayments payments;
+    private RNPaymentsGoogleModule mPayments;
+    private String _licenseKey;
+    private Boolean _licenseKeySetInConstructor = false;
 
     public RNPaymentsPackage(String licenseKey) {
         _licenseKey = licenseKey;
         _licenseKeySetInConstructor = true;
     }
-
     public RNPaymentsPackage() {
     }
 
-    private String _licenseKey;
-    private Boolean _licenseKeySetInConstructor = false;
-
+    @NonNull
     @Override
     public List<NativeModule> createNativeModules(
-            ReactApplicationContext reactContext) {
+            @NonNull ReactApplicationContext reactContext
+    ) {
         List<NativeModule> modules = new ArrayList<>();
+
+        modules.add(new RNPaymentsAmazonModule(reactContext));
         if (!_licenseKeySetInConstructor) {
-            payments = new RNPayments(reactContext);
+            mPayments = new RNPaymentsGoogleModule(reactContext);
         } else {
-            payments = new RNPayments(reactContext, _licenseKey);
+            mPayments = new RNPaymentsGoogleModule(reactContext, _licenseKey);
         }
-        modules.add(payments);
+        modules.add(mPayments);
 
         return modules;
     }
 
+    @NonNull
     @Override
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Arrays.<ViewManager>asList();
+    public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {
+        return Collections.emptyList();
     }
 
+    // Deprecated from RN 0.47
+    public List<Class<? extends JavaScriptModule>> createJSModules() {
+        return Collections.emptyList();
+    }
 
     public void onActivityResult(Activity activity, final int requestCode, final int resultCode, final Intent intent) {
-        if (payments != null) {
-            payments.onActivityResult(activity, requestCode, resultCode, intent);
+        if (mPayments != null) {
+            mPayments.onActivityResult(activity, requestCode, resultCode, intent);
         }
     }
 }

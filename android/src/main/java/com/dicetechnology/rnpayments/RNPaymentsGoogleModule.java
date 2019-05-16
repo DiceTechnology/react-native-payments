@@ -22,15 +22,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RNPayments extends ReactContextBaseJavaModule implements ActivityEventListener, BillingProcessor.IBillingHandler {
+import javax.annotation.Nullable;
+
+public class RNPaymentsGoogleModule extends ReactContextBaseJavaModule implements ActivityEventListener, BillingProcessor.IBillingHandler {
 
     public static final int PURCHASE_FLOW_REQUEST_CODE = 32459;
 
     ReactApplicationContext reactContext;
     String LICENSE_KEY = null;
     BillingProcessor bp;
+    private HashMap<String, Promise> mPromiseCache = new HashMap<>();
 
-    public RNPayments(ReactApplicationContext reactContext, String licenseKey) {
+    public RNPaymentsGoogleModule(ReactApplicationContext reactContext, String licenseKey) {
         super(reactContext);
         this.reactContext = reactContext;
         LICENSE_KEY = licenseKey;
@@ -38,7 +41,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
         reactContext.addActivityEventListener(this);
     }
 
-    public RNPayments(ReactApplicationContext reactContext) {
+    public RNPaymentsGoogleModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
         int keyResourceId = this.reactContext
@@ -51,13 +54,15 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
 
     @Override
     public String getName() {
-        return "RNPayments";
+        return "RNPaymentsGoogleModule";
     }
 
+    @Nullable
     @Override
     public Map<String, Object> getConstants() {
-        final Map<String, Object> constants = new HashMap<>();
-        return constants;
+        Map<String, Object> map = new HashMap<>();
+        map.put("APP_STORE_AVAILABLE", Utils.getAppStore(getReactApplicationContext()) == AppStore.GOOGLE);
+        return map;
     }
 
     @Override
@@ -410,7 +415,6 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
         onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode != PromiseConstants.PURCHASE_FLOW_REQUEST_CODE) {
             return;
@@ -428,9 +432,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
 
     }
 
-    HashMap<String, Promise> mPromiseCache = new HashMap<>();
-
-    synchronized void resolvePromise(String key, Object value) {
+    private synchronized void resolvePromise(String key, Object value) {
         if (mPromiseCache.containsKey(key)) {
             Promise promise = mPromiseCache.get(key);
             promise.resolve(value);
@@ -438,7 +440,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
         }
     }
 
-    synchronized void rejectPromise(String key, String reason) {
+    private synchronized void rejectPromise(String key, String reason) {
         if (mPromiseCache.containsKey(key)) {
             Promise promise = mPromiseCache.get(key);
             promise.reject("EUNSPECIFIED", reason);
@@ -446,7 +448,7 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
         }
     }
 
-    synchronized Boolean putPromise(String key, Promise promise) {
+    private synchronized Boolean putPromise(String key, Promise promise) {
         if (!mPromiseCache.containsKey(key)) {
             mPromiseCache.put(key, promise);
             return true;
@@ -454,11 +456,11 @@ public class RNPayments extends ReactContextBaseJavaModule implements ActivityEv
         return false;
     }
 
-    synchronized Boolean hasPromise(String key) {
+    private synchronized Boolean hasPromise(String key) {
         return mPromiseCache.containsKey(key);
     }
 
-    synchronized void clearPromises() {
+    private synchronized void clearPromises() {
         mPromiseCache.clear();
     }
 }

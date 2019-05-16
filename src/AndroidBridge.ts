@@ -2,16 +2,32 @@ import { NativeEventEmitter, NativeModules } from 'react-native';
 import base64 from './utils/base64';
 import { IBridge } from './Bridge';
 import {
+  AppStore,
   IProduct,
-  ITransaction,
-  ITransactionNativeAndroid,
+  ITransactionGoogle,
+  ITransactionNativeGoogle,
   TProductId
 } from './type';
 
-const { RNPayments } = NativeModules;
+const { RNPaymentsGoogleModule: RNPayments } = NativeModules;
 
 export class AndroidBridge implements IBridge {
   public eventEmitter = new NativeEventEmitter(RNPayments);
+
+  public static isAppStoreAvailable(): boolean {
+    return RNPayments && !!RNPayments.APP_STORE_AVAILABLE;
+  }
+
+  private static async open() {
+    await RNPayments.close();
+    await RNPayments.open();
+  }
+
+  availableAppStore(): AppStore {
+    return AndroidBridge.isAppStoreAvailable()
+      ? AppStore.GOOGLE
+      : AppStore.UNKNOWN;
+  }
 
   async loadProducts(productIds: TProductId[]): Promise<IProduct[]> {
     const validProductIds = productIds.filter(
@@ -39,7 +55,7 @@ export class AndroidBridge implements IBridge {
   async purchase(
     productId: TProductId,
     developerPayload: string
-  ): Promise<ITransaction> {
+  ): Promise<ITransactionGoogle> {
     try {
       await AndroidBridge.open();
       let success = await RNPayments.purchase(productId, developerPayload);
@@ -47,7 +63,7 @@ export class AndroidBridge implements IBridge {
         success = await RNPayments.loadOwnedPurchasesFromGoogle();
       }
       if (success) {
-        const details: ITransactionNativeAndroid = await RNPayments.getPurchaseTransactionDetails(
+        const details: ITransactionNativeGoogle = await RNPayments.getPurchaseTransactionDetails(
           productId
         );
         return {
@@ -69,12 +85,12 @@ export class AndroidBridge implements IBridge {
   async subscribe(
     productId: TProductId,
     developerPayload: string
-  ): Promise<ITransaction> {
+  ): Promise<ITransactionGoogle> {
     try {
       const success = await RNPayments.subscribe(productId, developerPayload);
       if (success) {
         await RNPayments.loadOwnedPurchasesFromGoogle();
-        const details: ITransactionNativeAndroid = await RNPayments.getSubscriptionTransactionDetails(
+        const details: ITransactionNativeGoogle = await RNPayments.getSubscriptionTransactionDetails(
           productId
         );
         return {
@@ -97,7 +113,7 @@ export class AndroidBridge implements IBridge {
     oldProductIds: TProductId[],
     productId: TProductId,
     developerPayload: string
-  ): Promise<ITransaction> {
+  ): Promise<ITransactionGoogle> {
     try {
       await AndroidBridge.open();
       const success = RNPayments.updateSubscription(
@@ -107,7 +123,7 @@ export class AndroidBridge implements IBridge {
       );
       if (success) {
         await RNPayments.loadOwnedPurchasesFromGoogle();
-        const details: ITransactionNativeAndroid = await RNPayments.getSubscriptionTransactionDetails(
+        const details: ITransactionNativeGoogle = await RNPayments.getSubscriptionTransactionDetails(
           productId
         );
         return {
@@ -146,22 +162,22 @@ export class AndroidBridge implements IBridge {
     }
   }
 
-  async restore(): Promise<ITransaction[]> {
+  async restore(): Promise<ITransactionGoogle[]> {
     try {
       await AndroidBridge.open();
       await RNPayments.loadOwnedPurchasesFromGoogle();
       const products = await RNPayments.listOwnedProducts();
       const subscriptions = await RNPayments.listOwnedSubscriptions();
-      let transactionsRequest: Promise<ITransactionNativeAndroid>[] = [];
+      let transactionsRequest: Promise<ITransactionNativeGoogle>[] = [];
       if (Array.isArray(products) && products.length > 0) {
         const productTransactions: Promise<
-          ITransactionNativeAndroid
+          ITransactionNativeGoogle
         >[] = products.map(p => RNPayments.getPurchaseTransactionDetails(p));
         transactionsRequest = transactionsRequest.concat(productTransactions);
       }
       if (Array.isArray(subscriptions) && subscriptions.length > 0) {
         const subscriptionTransactions: Promise<
-          ITransactionNativeAndroid
+          ITransactionNativeGoogle
         >[] = subscriptions.map(s =>
           RNPayments.getSubscriptionTransactionDetails(s)
         );
@@ -169,7 +185,7 @@ export class AndroidBridge implements IBridge {
           subscriptionTransactions
         );
       }
-      const transactions: ITransactionNativeAndroid[] = await Promise.all(
+      const transactions: ITransactionNativeGoogle[] = await Promise.all(
         transactionsRequest
       );
       return transactions.map(t => ({
@@ -181,10 +197,5 @@ export class AndroidBridge implements IBridge {
     } finally {
       await RNPayments.close();
     }
-  }
-
-  private static async open() {
-    await RNPayments.close();
-    await RNPayments.open();
   }
 }

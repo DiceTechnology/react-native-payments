@@ -1,21 +1,35 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import { IBridge } from './Bridge';
-import { IProduct, ITransaction, TProductId } from './type';
+import {
+  AppStore,
+  IProduct,
+  ITransaction,
+  ITransactionApple,
+  TProductId
+} from './type';
 
 const { RNPayments } = NativeModules;
 
 export class IOSBridge implements IBridge {
   public eventEmitter = new NativeEventEmitter(RNPayments);
 
+  public static isAppStoreAvailable(): boolean {
+    return !!RNPayments;
+  }
+
   async loadProducts(products: TProductId[]): Promise<IProduct[]> {
     const validProducts = products.filter(p => p !== null && p !== undefined);
     return await RNPayments.loadProducts(validProducts);
   }
 
+  availableAppStore(): AppStore {
+    return IOSBridge.isAppStoreAvailable() ? AppStore.APPLE : AppStore.UNKNOWN;
+  }
+
   async purchase(
     product: TProductId,
     developerPayload: string
-  ): Promise<ITransaction> {
+  ): Promise<ITransactionApple> {
     return await RNPayments.purchaseProduct(product);
   }
 

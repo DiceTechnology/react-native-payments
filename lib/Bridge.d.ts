@@ -1,4 +1,4 @@
-import { IProduct, ITransaction, TProductId } from './type';
+import { AppStore, IProduct, ITransaction, TProductId } from './type';
 export interface IBridge {
     loadProducts(productIds: TProductId[]): Promise<IProduct[]>;
     purchase(productId: TProductId, developerPayload: string): Promise<ITransaction>;
@@ -6,4 +6,5 @@ export interface IBridge {
     upgrade(oldProductIds: TProductId[], productId: TProductId, developerPayload: string): Promise<ITransaction>;
     loadOwnedPurchases(): Promise<any>;
     restore(): Promise<any>;
+    availableAppStore(): AppStore;
 }
