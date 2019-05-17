@@ -1,2 +1,3 @@
 import { IBridge } from './Bridge';
-export declare const bridge: IBridge;
+declare let bridge: IBridge;
+export { bridge };

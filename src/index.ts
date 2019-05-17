@@ -1,12 +1,17 @@
 import { Platform } from 'react-native';
-import { IBridge } from './Bridge';
-import { IOSBridge } from './IOSBridge';
-import { AndroidBridge } from './AndroidBridge';
-import { AmazonBridge } from './AmazonBridge';
+import { IBridge, UnimplementedBridge } from './Bridge';
 
-export const bridge: IBridge = Platform.select({
-  ios: new IOSBridge() as IBridge,
-  android: (AmazonBridge.isAppStoreAvailable()
+let bridge: IBridge = new UnimplementedBridge();
+if (Platform.OS === 'android') {
+} else if (Platform.OS === 'ios') {
+  const { IOSBridge } = require('./IOSBridge');
+  bridge = new IOSBridge() as IBridge;
+} else {
+  const { AndroidBridge } = require('./AndroidBridge');
+  const { AmazonBridge } = require('./AmazonBridge');
+  bridge = (AmazonBridge.isAppStoreAvailable()
     ? new AmazonBridge()
-    : new AndroidBridge()) as IBridge
-});
+    : new AndroidBridge()) as IBridge;
+}
+
+export { bridge };

@@ -8,3 +8,12 @@ export interface IBridge {
     restore(): Promise<any>;
     availableAppStore(): AppStore;
 }
+export declare class UnimplementedBridge implements IBridge {
+    availableAppStore(): AppStore;
+    loadOwnedPurchases(): Promise<any>;
+    loadProducts(productIds: TProductId[]): Promise<IProduct[]>;
+    purchase(productId: string, developerPayload: string): Promise<ITransaction>;
+    restore(): Promise<any>;
+    subscribe(productId: string, developerPayload: string): Promise<ITransaction>;
+    upgrade(oldProductIds: TProductId[], productId: string, developerPayload: string): Promise<ITransaction>;
+}
