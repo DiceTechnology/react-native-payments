@@ -32,26 +32,26 @@ export class UnimplementedBridge implements IBridge {
   }
 
   loadOwnedPurchases(): Promise<any> {
-    return Promise.reject('NOT IMPLEMENTED');
+    return Promise.reject('loadOwnedPurchases: NOT IMPLEMENTED');
   }
 
   loadProducts(productIds: TProductId[]): Promise<IProduct[]> {
-    return Promise.reject('NOT IMPLEMENTED');
+    return Promise.reject('loadProducts: NOT IMPLEMENTED');
   }
 
   purchase(productId: string, developerPayload: string): Promise<ITransaction> {
-    return Promise.reject('NOT IMPLEMENTED');
+    return Promise.reject('purchase: NOT IMPLEMENTED');
   }
 
   restore(): Promise<any> {
-    return Promise.reject('NOT IMPLEMENTED');
+    return Promise.reject('restore: NOT IMPLEMENTED');
   }
 
   subscribe(
     productId: string,
     developerPayload: string
   ): Promise<ITransaction> {
-    return Promise.reject('NOT IMPLEMENTED');
+    return Promise.reject('subscribe: NOT IMPLEMENTED');
   }
 
   upgrade(
@@ -59,6 +59,6 @@ export class UnimplementedBridge implements IBridge {
     productId: string,
     developerPayload: string
   ): Promise<ITransaction> {
-    return Promise.reject('NOT IMPLEMENTED');
+    return Promise.reject('upgrade: NOT IMPLEMENTED');
   }
 }
