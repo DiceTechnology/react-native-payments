@@ -182,7 +182,7 @@ restoreCompletedTransactionsFailedWithError:(NSError *)error
     }
 }
 
-RCT_EXPORT_METHOD(restorePurchasesWithResolver:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(restore:(RCTPromiseResolveBlock)resolve
                   rejector:(RCTPromiseRejectBlock)reject)
 {
     NSString *restoreRequest = @"restoreRequest";

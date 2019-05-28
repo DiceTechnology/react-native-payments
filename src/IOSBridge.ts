@@ -54,7 +54,7 @@ export class IOSBridge implements IBridge {
   }
 
   async restore() {
-    const response = await RNPayments.restorePurchases();
+    const response = await RNPayments.restore();
     if (Array.isArray(response) && response.length > 0) {
       response.sort((a, b) => b.transactionDate - a.transactionDate);
       return [response[0]];
