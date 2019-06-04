@@ -87,6 +87,7 @@ export class AndroidBridge implements IBridge {
     developerPayload: string
   ): Promise<ITransactionGoogle> {
     try {
+      await AndroidBridge.open();
       const success = await RNPayments.subscribe(productId, developerPayload);
       if (success) {
         await RNPayments.loadOwnedPurchasesFromGoogle();
