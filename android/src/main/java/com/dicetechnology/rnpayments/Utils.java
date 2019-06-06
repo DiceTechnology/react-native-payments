@@ -13,16 +13,18 @@ public class Utils {
         String AMAZON_MODEL = Build.MODEL;
 
 
-        if (installerPackageName != null && installerPackageName.startsWith("com.amazon")) {
+        // Check for amazon devices who have used google play store to install the app
+        if ("com.android.vending".equals(installerPackageName)) {
+            return AppStore.GOOGLE;
+        } else if (installerPackageName != null && installerPackageName.startsWith("com.amazon")) {
             return AppStore.AMAZON;
         } else if (AMAZON_MODEL.matches("AFTN")) {
             return AppStore.AMAZON;
         } else if (pkgManager.hasSystemFeature(AMAZON_FEATURE_FIRE_TV)) {
             return AppStore.AMAZON;
-        } else if ("com.android.vending".equals(installerPackageName)) {
-            return AppStore.GOOGLE;
         }
 
-        return AppStore.UNKNOWN;
+        // any other case, assume google play store is available
+        return AppStore.GOOGLE;
     }
 }
