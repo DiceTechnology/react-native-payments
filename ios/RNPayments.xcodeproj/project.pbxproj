@@ -10,6 +10,10 @@
 		48C6529F200B81C400A3795C /* RNPayments.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C6529E200B81C400A3795C /* RNPayments.m */; };
 		48C652A0200B81C400A3795C /* RNPayments.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 48C6529D200B81C400A3795C /* RNPayments.h */; };
 		48C652A8200B824C00A3795C /* SKProduct+StringPrice.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C652A7200B824C00A3795C /* SKProduct+StringPrice.m */; };
+		D1033C8E225757830073B620 /* RNPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = D1033C8D225757830073B620 /* RNPromise.m */; };
+		D1033C8F225757830073B620 /* RNPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = D1033C8D225757830073B620 /* RNPromise.m */; };
+		D14181932254E1FD009CE9B4 /* RNPayments.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C6529E200B81C400A3795C /* RNPayments.m */; };
+		D14181942254E200009CE9B4 /* SKProduct+StringPrice.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C652A7200B824C00A3795C /* SKProduct+StringPrice.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,6 +27,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D14181882254E1EF009CE9B4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -31,10 +44,20 @@
 		48C6529E200B81C400A3795C /* RNPayments.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNPayments.m; sourceTree = "<group>"; };
 		48C652A6200B824C00A3795C /* SKProduct+StringPrice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SKProduct+StringPrice.h"; sourceTree = "<group>"; };
 		48C652A7200B824C00A3795C /* SKProduct+StringPrice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SKProduct+StringPrice.m"; sourceTree = "<group>"; };
+		D1033C8C225757830073B620 /* RNPromise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNPromise.h; sourceTree = "<group>"; };
+		D1033C8D225757830073B620 /* RNPromise.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNPromise.m; sourceTree = "<group>"; };
+		D141818A2254E1EF009CE9B4 /* libRNPayments-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRNPayments-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		48C65297200B81C400A3795C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D14181872254E1EF009CE9B4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -56,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				48C6529A200B81C400A3795C /* libRNPayments.a */,
+				D141818A2254E1EF009CE9B4 /* libRNPayments-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -67,6 +91,8 @@
 				48C6529E200B81C400A3795C /* RNPayments.m */,
 				48C652A6200B824C00A3795C /* SKProduct+StringPrice.h */,
 				48C652A7200B824C00A3795C /* SKProduct+StringPrice.m */,
+				D1033C8C225757830073B620 /* RNPromise.h */,
+				D1033C8D225757830073B620 /* RNPromise.m */,
 			);
 			path = RNPayments;
 			sourceTree = "<group>";
@@ -91,6 +117,23 @@
 			productReference = 48C6529A200B81C400A3795C /* libRNPayments.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		D14181892254E1EF009CE9B4 /* RNPayments-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D14181922254E1EF009CE9B4 /* Build configuration list for PBXNativeTarget "RNPayments-tvOS" */;
+			buildPhases = (
+				D14181862254E1EF009CE9B4 /* Sources */,
+				D14181872254E1EF009CE9B4 /* Frameworks */,
+				D14181882254E1EF009CE9B4 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RNPayments-tvOS";
+			productName = "RNPayments-tvOS";
+			productReference = D141818A2254E1EF009CE9B4 /* libRNPayments-tvOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -102,6 +145,10 @@
 				TargetAttributes = {
 					48C65299200B81C400A3795C = {
 						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					D14181892254E1EF009CE9B4 = {
+						CreatedOnToolsVersion = 10.1;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -119,6 +166,7 @@
 			projectRoot = "";
 			targets = (
 				48C65299200B81C400A3795C /* RNPayments */,
+				D14181892254E1EF009CE9B4 /* RNPayments-tvOS */,
 			);
 		};
 /* End PBXProject section */
@@ -128,8 +176,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1033C8E225757830073B620 /* RNPromise.m in Sources */,
 				48C6529F200B81C400A3795C /* RNPayments.m in Sources */,
 				48C652A8200B824C00A3795C /* SKProduct+StringPrice.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D14181862254E1EF009CE9B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1033C8F225757830073B620 /* RNPromise.m in Sources */,
+				D14181942254E200009CE9B4 /* SKProduct+StringPrice.m in Sources */,
+				D14181932254E1FD009CE9B4 /* RNPayments.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +325,41 @@
 			};
 			name = Release;
 		};
+		D14181902254E1EF009CE9B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CODE_SIGN_STYLE = Automatic;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.1;
+			};
+			name = Debug;
+		};
+		D14181912254E1EF009CE9B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CODE_SIGN_STYLE = Automatic;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -283,6 +377,15 @@
 			buildConfigurations = (
 				48C652A4200B81C400A3795C /* Debug */,
 				48C652A5200B81C400A3795C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D14181922254E1EF009CE9B4 /* Build configuration list for PBXNativeTarget "RNPayments-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D14181902254E1EF009CE9B4 /* Debug */,
+				D14181912254E1EF009CE9B4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

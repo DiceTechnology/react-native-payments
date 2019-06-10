@@ -1,36 +1,45 @@
 {
   "name": "react-native-payments",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "description": "Wrapper for react-native iOS in-app-purchases and Android in-app-billing.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahmanasadi/react-native-payments.git"
   },
-  "keywords": ["react-native", "android", "ios", "in-app-purchases", "in-app-billing"],
+  "keywords": [
+    "react-native",
+    "android",
+    "ios",
+    "in-app-purchases",
+    "in-app-billing",
+    "amazon-iap"
+  ],
   "author": "Bahman Asadi",
   "license": "MIT",
   "peerDependencies": {
-    "react": "16.0.0-beta.5",
-    "react-native": "0.49.0"
+    "react-native": "^0.55.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.1",
-    "eslint": "^4.15.0",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.5.1"
+    "@types/react-native": "^0.57.42",
+    "husky": "^1.3.1",
+    "prettier": "^1.16.4",
+    "tslint": "^5.15.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.4.1"
   },
   "bugs": {
     "url": "https://github.com/bahmanasadi/react-native-payments/issues"
   },
   "homepage": "https://github.com/bahmanasadi/react-native-payments#readme",
-  "dependencies": {
-    "prop-types": "^15.6.0",
-    "q": "^1.5.1"
+  "dependencies": {},
+  "lint-staged": {
+    "*.ts*": [
+      "prettier --debug-check --print-width=85",
+      "tslint --fix"
+    ]
   }
 }
