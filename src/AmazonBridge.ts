@@ -18,8 +18,12 @@ export class AmazonBridge implements IBridge {
   }
 
   async loadProducts(productIds: TProductId[]): Promise<IProduct[]> {
-    const validProducts = productIds.filter(p => p !== null && p !== undefined);
-    return await RNPayments.loadProducts(validProducts);
+    if (productIds && productIds.length > 0) {
+      const validProducts = productIds.filter(p => p !== null && p !== undefined);
+      return await RNPayments.loadProducts(validProducts);
+    }
+
+    return [];
   }
 
   async purchase(
