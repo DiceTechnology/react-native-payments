@@ -41,11 +41,11 @@ export class AmazonBridge implements IBridge {
   }
 
   async upgrade(
-    oldProductIds: TProductId[],
-    productId: TProductId,
+    oldProducts: TProductId[],
+    product: TProductId,
     developerPayload: string
   ): Promise<ITransactionAmazon> {
-    throw new Error('Subscription upgrade/downgrade not implemented');
+    return await RNPayments.purchaseProduct(product);
   }
 
   async consume(productId: TProductId) {}
