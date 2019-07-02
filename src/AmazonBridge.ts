@@ -18,8 +18,12 @@ export class AmazonBridge implements IBridge {
   }
 
   async loadProducts(productIds: TProductId[]): Promise<IProduct[]> {
-    const validProducts = productIds.filter(p => p !== null && p !== undefined);
-    return await RNPayments.loadProducts(validProducts);
+    if (productIds && productIds.length > 0) {
+      const validProducts = productIds.filter(p => p !== null && p !== undefined);
+      return await RNPayments.loadProducts(validProducts);
+    }
+
+    return [];
   }
 
   async purchase(
@@ -37,11 +41,11 @@ export class AmazonBridge implements IBridge {
   }
 
   async upgrade(
-    oldProductIds: TProductId[],
-    productId: TProductId,
+    oldProducts: TProductId[],
+    product: TProductId,
     developerPayload: string
   ): Promise<ITransactionAmazon> {
-    throw new Error('Subscription upgrade/downgrade not implemented');
+    return await RNPayments.purchaseProduct(product);
   }
 
   async consume(productId: TProductId) {}

@@ -201,11 +201,16 @@ public class RNPaymentsAmazonModule extends ReactContextBaseJavaModule {
     // Amazon supports skus up to 100 - needs pagination if more is to be loaded
     @ReactMethod
     public void loadProducts(ReadableArray skus, Promise promise) {
-        putPromise(PromiseConstants.LOAD_PRODUCTS, promise);
         Set<String> set = new HashSet<>();
-        for (int i = 0; i < skus.size(); i++)
+        for (int i = 0; i < skus.size(); i++) {
             set.add(skus.getString(i));
-        PurchasingService.getProductData(set);
+        }
+        if (set.size() == 0) {
+            promise.resolve(Arguments.createArray());
+        } else {
+            putPromise(PromiseConstants.LOAD_PRODUCTS, promise);
+            PurchasingService.getProductData(set);
+        }
     }
 
     @ReactMethod

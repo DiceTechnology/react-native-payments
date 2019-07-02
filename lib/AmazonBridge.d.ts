@@ -7,7 +7,7 @@ export declare class AmazonBridge implements IBridge {
     loadProducts(productIds: TProductId[]): Promise<IProduct[]>;
     purchase(product: TProductId, developerPayload: string): Promise<ITransactionAmazon>;
     subscribe(product: TProductId, developerPayload: string): Promise<ITransactionAmazon>;
-    upgrade(oldProductIds: TProductId[], productId: TProductId, developerPayload: string): Promise<ITransactionAmazon>;
+    upgrade(oldProducts: TProductId[], product: TProductId, developerPayload: string): Promise<ITransactionAmazon>;
     consume(productId: TProductId): Promise<void>;
     loadOwnedPurchases(): Promise<never[]>;
     restore(): Promise<ITransactionAmazon[]>;
