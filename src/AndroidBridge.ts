@@ -117,7 +117,7 @@ export class AndroidBridge implements IBridge {
   ): Promise<ITransactionGoogle> {
     try {
       await AndroidBridge.open();
-      const success = RNPayments.updateSubscription(
+      const success = await RNPayments.updateSubscription(
         oldProductIds,
         productId,
         developerPayload
@@ -137,6 +137,8 @@ export class AndroidBridge implements IBridge {
       throw new Error(
         'Subscription upgrade/downgrade was unsuccessful, please try again'
       );
+    } catch (err) {
+      throw err;
     } finally {
       await RNPayments.close();
     }
