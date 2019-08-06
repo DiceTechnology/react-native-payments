@@ -13,7 +13,7 @@ export declare class UnimplementedBridge implements IBridge {
     loadOwnedPurchases(): Promise<any>;
     loadProducts(productIds: TProductId[]): Promise<IProduct[]>;
     purchase(productId: string, developerPayload: string): Promise<ITransaction>;
-    restore(): Promise<any>;
+    restore(): Promise<ITransaction[]>;
     subscribe(productId: string, developerPayload: string): Promise<ITransaction>;
     upgrade(oldProductIds: TProductId[], productId: string, developerPayload: string): Promise<ITransaction>;
 }

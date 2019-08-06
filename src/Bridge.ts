@@ -43,7 +43,7 @@ export class UnimplementedBridge implements IBridge {
     return Promise.reject('purchase: NOT IMPLEMENTED');
   }
 
-  restore(): Promise<any> {
+  restore(): Promise<ITransaction[]> {
     return Promise.reject('restore: NOT IMPLEMENTED');
   }
 

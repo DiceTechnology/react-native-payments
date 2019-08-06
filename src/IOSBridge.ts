@@ -3,7 +3,6 @@ import { IBridge } from './Bridge';
 import {
   AppStore,
   IProduct,
-  ITransaction,
   ITransactionApple,
   TProductId
 } from './type';
@@ -36,7 +35,7 @@ export class IOSBridge implements IBridge {
   async subscribe(
     product: TProductId,
     developerPayload: string
-  ): Promise<ITransaction> {
+  ): Promise<ITransactionApple> {
     return await RNPayments.purchaseProduct(product);
   }
 
@@ -53,7 +52,7 @@ export class IOSBridge implements IBridge {
     return [];
   }
 
-  async restore() {
+  async restore(): Promise<ITransactionApple[]> {
     const response = await RNPayments.restore();
     if (Array.isArray(response) && response.length > 0) {
       response.sort((a, b) => b.transactionDate - a.transactionDate);
