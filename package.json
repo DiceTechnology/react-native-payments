@@ -27,7 +27,7 @@
     "@types/react-native": "^0.57.42",
     "husky": "3.0.0",
     "prettier": "^1.16.4",
-    "tslint": "^5.15.0",
+    "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.4.1"
   },
