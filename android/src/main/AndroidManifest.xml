@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.dicetechnology.rnpayment">
+    package="com.dicetechnology.rnpayments">
 
     <application>
         <receiver android:name="com.amazon.device.iap.ResponseReceiver">
