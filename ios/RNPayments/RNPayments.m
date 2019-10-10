@@ -255,7 +255,7 @@ RCT_EXPORT_METHOD(receiptData:(RCTPromiseResolveBlock)resolve
                                       @"currencyCode": [item.priceLocale objectForKey:NSLocaleCurrencyCode],
                                       @"currencySymbol": [item.priceLocale objectForKey:NSLocaleCurrencySymbol],
                                       @"countryCode": [item.priceLocale objectForKey: NSLocaleCountryCode],
-                                      @"downloadable": item.downloadable ? @"true" : @"false" ,
+                                      @"downloadable": item.isDownloadable ? @"true" : @"false" ,
                                       };
             [productsArrayForJS addObject:product];
         }
