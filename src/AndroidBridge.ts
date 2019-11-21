@@ -8,6 +8,7 @@ import {
   ITransactionNativeGoogle,
   TProductId
 } from './type';
+import { licenceSkuFilter } from './utils';
 
 const { RNPaymentsGoogleModule: RNPayments } = NativeModules;
 
@@ -30,9 +31,7 @@ export class AndroidBridge implements IBridge {
   }
 
   async loadProducts(productIds: TProductId[]): Promise<IProduct[]> {
-    const validProductIds = productIds.filter(
-      p => p !== null && p !== undefined
-    );
+    const validProductIds = productIds.filter(licenceSkuFilter);
 
     if (validProductIds.length === 0) {
       return [];
