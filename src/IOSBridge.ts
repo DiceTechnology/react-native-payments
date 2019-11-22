@@ -6,6 +6,7 @@ import {
   ITransactionApple,
   TProductId
 } from './type';
+import { licenceSkuFilter } from './utils';
 
 const { RNPayments } = NativeModules;
 
@@ -17,7 +18,7 @@ export class IOSBridge implements IBridge {
   }
 
   async loadProducts(products: TProductId[]): Promise<IProduct[]> {
-    const validProducts = products.filter(p => p !== null && p !== undefined);
+    const validProducts = products.filter(licenceSkuFilter);
     return await RNPayments.loadProducts(validProducts);
   }
 

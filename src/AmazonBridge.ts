@@ -1,6 +1,7 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import { IBridge } from './Bridge';
 import { AppStore, IProduct, ITransactionAmazon, TProductId } from './type';
+import { licenceSkuFilter } from './utils';
 
 const { RNPaymentsAmazonModule: RNPayments } = NativeModules;
 
@@ -19,7 +20,7 @@ export class AmazonBridge implements IBridge {
 
   async loadProducts(productIds: TProductId[]): Promise<IProduct[]> {
     if (productIds && productIds.length > 0) {
-      const validProducts = productIds.filter(p => p !== null && p !== undefined);
+      const validProducts = productIds.filter(licenceSkuFilter);
       return await RNPayments.loadProducts(validProducts);
     }
 
