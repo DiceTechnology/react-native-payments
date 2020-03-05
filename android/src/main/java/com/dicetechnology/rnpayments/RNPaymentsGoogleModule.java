@@ -274,7 +274,6 @@ public class RNPaymentsGoogleModule extends ReactContextBaseJavaModule implement
                             map.putString("title", detail.title);
                             map.putString("description", detail.description);
                             map.putString("currencyCode", detail.currency);
-                            map.putDouble("price", detail.priceValue);
                             map.putString("priceString", detail.priceText);
                             map.putBoolean("isSubscription", detail.isSubscription);
                             arr.pushMap(map);
@@ -314,7 +313,6 @@ public class RNPaymentsGoogleModule extends ReactContextBaseJavaModule implement
                             map.putString("title", detail.title);
                             map.putString("description", detail.description);
                             map.putString("currencyCode", detail.currency);
-                            map.putDouble("price", detail.priceValue);
                             map.putString("priceString", detail.priceText);
                             map.putBoolean("isSubscription", detail.isSubscription);
                             map.putString("subscriptionPeriod", detail.subscriptionPeriod);

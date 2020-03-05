@@ -250,7 +250,6 @@ RCT_EXPORT_METHOD(receiptData:(RCTPromiseResolveBlock)resolve
                                       @"id": item.productIdentifier,
                                       @"description": item.localizedDescription ? item.localizedDescription : @"",
                                       @"title": item.localizedTitle ? item.localizedTitle : @"",
-                                      @"price": item.price,
                                       @"priceString": item.priceString,
                                       @"currencyCode": [item.priceLocale objectForKey:NSLocaleCurrencyCode],
                                       @"currencySymbol": [item.priceLocale objectForKey:NSLocaleCurrencySymbol],
