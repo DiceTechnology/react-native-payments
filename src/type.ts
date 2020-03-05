@@ -6,7 +6,6 @@ export interface IProduct {
   id: string;
   description: string;
   title: string;
-  price: number;
   priceString: string;
   currencyCode: string;
 }

@@ -23,7 +23,6 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,22 +52,11 @@ public class RNPaymentsAmazonModule extends ReactContextBaseJavaModule {
                         for (Map.Entry<String, Product> skuDetails : productData.entrySet()) {
                             Product product = skuDetails.getValue();
                             ProductType productType = product.getProductType();
-                            NumberFormat format = NumberFormat.getCurrencyInstance();
-
-                            Number number;
-                            try {
-                                final String price = product.getPrice().replaceAll("^[A-Za-z]+\\s?|\\s?[A-Za-z]+$", "");
-                                number = format.parse(price);
-                            } catch (ParseException e) {
-                                rejectPromises(PromiseConstants.LOAD_PRODUCTS, "Pricing Parsing error in onProductDataResponse: ", e.getMessage(), e);
-                                return;
-                            }
                             WritableMap map = Arguments.createMap();
 
                             map.putString("id", product.getSku());
                             map.putString("title", product.getTitle());
                             map.putString("description", product.getDescription());
-                            map.putDouble("price", number.doubleValue());
                             map.putString("priceString", product.getPrice());
                             map.putNull("currency");
                             maps.pushMap(map);
