@@ -57,7 +57,7 @@ public class RNPaymentsAmazonModule extends ReactContextBaseJavaModule {
 
                             Number number;
                             try {
-                                final String price = product.getPrice().replaceAll("^\\D+|\\D+$", "");
+                                final String price = product.getPrice().replaceAll("^[A-Za-z]+\\s?|\\s?[A-Za-z]+$", "");
                                 number = format.parse(price);
                             } catch (ParseException e) {
                                 rejectPromises(PromiseConstants.LOAD_PRODUCTS, "Pricing Parsing error in onProductDataResponse: ", e.getMessage(), e);
