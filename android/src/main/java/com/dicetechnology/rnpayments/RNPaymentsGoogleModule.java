@@ -422,7 +422,7 @@ public class RNPaymentsGoogleModule extends ReactContextBaseJavaModule implement
         if (resultCode == Activity.RESULT_OK && responseCode == PromiseConstants.BILLING_RESPONSE_RESULT_OK) {
             resolvePromise(PromiseConstants.PURCHASE_OR_SUBSCRIBE, true);
         } else {
-            rejectPromise(PromiseConstants.PURCHASE_OR_SUBSCRIBE, "An error has occured. Code " + requestCode);
+            rejectPromise(PromiseConstants.PURCHASE_OR_SUBSCRIBE, "An error has occured. Request code: " + requestCode + " Result code: " + resultCode);
         }
     }
 
