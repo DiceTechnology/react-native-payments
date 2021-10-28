@@ -1,7 +1,6 @@
 package com.dicetechnology.rnpayments;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.amazon.device.iap.PurchasingListener;
 import com.amazon.device.iap.PurchasingService;
@@ -173,7 +172,6 @@ public class RNPaymentsAmazonModule extends ReactContextBaseJavaModule {
         registerListener(reactContext);
     }
 
-    @NonNull
     @Override
     public String getName() {
         return "RNPaymentsAmazonModule";
