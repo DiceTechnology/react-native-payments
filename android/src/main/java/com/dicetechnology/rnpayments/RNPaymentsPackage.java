@@ -2,7 +2,6 @@ package com.dicetechnology.rnpayments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
@@ -27,10 +26,9 @@ public class RNPaymentsPackage implements ReactPackage {
     public RNPaymentsPackage() {
     }
 
-    @NonNull
     @Override
     public List<NativeModule> createNativeModules(
-            @NonNull ReactApplicationContext reactContext
+        ReactApplicationContext reactContext
     ) {
         List<NativeModule> modules = new ArrayList<>();
 
@@ -45,9 +43,8 @@ public class RNPaymentsPackage implements ReactPackage {
         return modules;
     }
 
-    @NonNull
     @Override
-    public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
         return Collections.emptyList();
     }
 
